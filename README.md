@@ -67,7 +67,8 @@ Below are the wireframes showcasing the app's key screens:
 9. **Checkout Confirmation**
    - Confirms successful completion of the purchase with a success message
 
-![image](https://github.com/user-attachments/assets/d59cf682-a139-4968-bfff-019df9ecb5ba)
+![image](https://github.com/user-attachments/assets/bc9a9e7f-c1b0-4537-9305-7cbe1cc41e9f)
+
 
 ### User Flow
 The flow diagram below illustrates how users navigate through the app's screens:
