@@ -8,13 +8,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 
+//This
 class BookViewModel(private val repository: BookRepository) : ViewModel() {
     val bookUiState = repository.books.stateIn(
-        viewModelScope, //viewModelScope - automatically cancels coroutines when the ViewModel is cleared.
-        SharingStarted.WhileSubscribed(5000), //keeps the state active while there are subscribers, with a delay of 5000 ms before stopping.
-        emptyList() //The initial state.
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        emptyList()
     )
-    //An init block launches a coroutine in the viewModelScope to load initial contacts from the repository.
+
     init {
         viewModelScope.launch {
             repository.loadApiToDatabase()

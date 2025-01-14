@@ -9,9 +9,11 @@ import kotlinx.coroutines.flow.Flow
 //We use dao to control the database by fetching, inserting, updating or deleting data.
 @Dao
 interface BookDAO {
+    //Shows the list of all books
     @Query("SELECT * FROM books")
     fun getAllBooks(): Flow<List<BookEntity>>
 
+    //In this project Insert method is used to save data taken from API
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBooks(books: List<BookEntity>)
 

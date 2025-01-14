@@ -5,8 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
+//This part helps to initialize the Database
 @Database(entities = [BookEntity::class], version = 3, exportSchema = true)
-
 abstract class BookDatabase: RoomDatabase() {
     abstract fun bookDao(): BookDAO
 
