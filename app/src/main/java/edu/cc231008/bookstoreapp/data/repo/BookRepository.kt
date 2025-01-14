@@ -10,26 +10,13 @@ class BookRepository(
     private val bookDAO: BookDAO,
     private val bookRemoteService: BookRemoteService
 ) {
-    val books = bookDAO.getAllBooks()
-        .map { bookList ->
-            bookList.map { entity ->
-                BookTemplate(
-                    title = entity.title,
-                    subtitle = entity.subtitle,
-                    isbn13 = entity.isbn13,
-                    price = entity.price,
-                    image = entity.image,
-                    url = entity.url
-                )
-            }
-        }
 
+    //This function loads data from API to Database, so that data is available even if there is no internet connection
     suspend fun loadApiToDatabase() {
         try {
             val bookResponse = bookRemoteService.getNewBooks()
             println("Books Response: ${bookResponse.books}")
             if (bookResponse.error == "0") {
-                // Map each BookDto to a BookEntity
                 val bookEntities = bookResponse.books.map { dto ->
                     BookEntity(
                         title = dto.title,
@@ -50,4 +37,20 @@ class BookRepository(
             Log.e("LoadApiToDatabase", "Exception occurred: ${e.message}")
         }
     }
+
+    //This variable that contains the list of all new books
+    val books = bookDAO.getAllBooks()
+        .map { bookList ->
+            bookList.map { entity ->
+                BookTemplate(
+                    title = entity.title,
+                    subtitle = entity.subtitle,
+                    isbn13 = entity.isbn13,
+                    price = entity.price,
+                    image = entity.image,
+                    url = entity.url
+                )
+            }
+        }
+
 }
