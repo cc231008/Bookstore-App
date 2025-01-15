@@ -4,6 +4,7 @@ import android.util.Log
 import edu.cc231008.bookstoreapp.data.db.BookDAO
 import edu.cc231008.bookstoreapp.data.db.BookEntity
 import edu.cc231008.bookstoreapp.data.remote.BookRemoteService
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class BookRepository(
@@ -39,7 +40,7 @@ class BookRepository(
     }
 
     //This variable that contains the list of all new books
-    val books = bookDAO.getAllBooks()
+    var books = bookDAO.getAllBooks()
         .map { bookList ->
             bookList.map { entity ->
                 BookTemplate(
@@ -53,4 +54,18 @@ class BookRepository(
             }
         }
 
-}
+    suspend fun searchBooks(searchQuery: String): List<BookTemplate> {
+        val books = bookDAO.searchBooksByTitle(searchQuery)
+
+        return books.map { entity ->
+            BookTemplate(
+                title = entity.title,
+                subtitle = entity.subtitle,
+                isbn13 = entity.isbn13,
+                price = entity.price,
+                image = entity.image,
+                url = entity.url
+            )
+        }
+    }
+    }

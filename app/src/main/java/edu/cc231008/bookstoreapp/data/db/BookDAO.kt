@@ -17,4 +17,7 @@ interface BookDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBooks(books: List<BookEntity>)
 
+    @Query("SELECT * FROM books WHERE title LIKE '%' || :searchQuery || '%' ORDER BY title ASC")
+    suspend fun searchBooksByTitle(searchQuery: String): List<BookEntity>
+
 }
