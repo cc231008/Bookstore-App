@@ -11,8 +11,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import edu.cc231008.bookstoreapp.data.repo.BookTemplate
@@ -23,27 +26,35 @@ fun HomeScreen(books: List<BookTemplate>, onBookClick: (BookTemplate) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize() // Takes up the whole screen
-            .padding(16.dp) // Adds padding to all sides
     ) {
-        // Displays the title of the app
-        Text(
-            text = "Bookstore", // The header text
-            style = MaterialTheme.typography.titleLarge, // Uses the app's large title style
-            modifier = Modifier.padding(vertical = 8.dp) // Adds padding above and below the text
-        )
+        // Header with brown background
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFF704214))
+                .padding(vertical = 24.dp)
+        ) {
+            Text(
+                text = "Bookstore", // Header text
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold
+                ),
+                color = Color.White,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
 
-        Spacer(modifier = Modifier.height(8.dp)) // Adds some space below the header
+        Spacer(modifier = Modifier.height(8.dp))
 
-        // Search Bar
-        var searchQuery by remember { mutableStateOf("") } // Keeps track of what the user types
+        var searchQuery by remember { mutableStateOf("") }
         Row(
             modifier = Modifier
-                .fillMaxWidth() // Makes the search bar take the full width
-                .padding(vertical = 8.dp), // Adds some padding vertically
-            horizontalArrangement = Arrangement.SpaceBetween // Ensures space between elements
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             BasicTextField(
-                value = searchQuery, // Binds the text field to the state variable
+                value = searchQuery,
                 onValueChange = { searchQuery = it }, // Updates the state as the user types
                 modifier = Modifier
                     .weight(1f) // Makes this element take up remaining space
@@ -64,15 +75,16 @@ fun HomeScreen(books: List<BookTemplate>, onBookClick: (BookTemplate) -> Unit) {
 
         // Displays a list of books
         LazyColumn(
-            modifier = Modifier.fillMaxSize(), // Takes up the remaining space
-            verticalArrangement = Arrangement.spacedBy(8.dp) // Adds space between each book card
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(books) { book -> // Loops through the list of books
-                BookCard(book = book, onClick = { onBookClick(book) }) // Displays a book card
+            items(books) { book ->
+                BookCard(book = book, onClick = { onBookClick(book) })
             }
         }
     }
 }
+
 
 @Composable
 fun BookCard(book: BookTemplate, onClick: () -> Unit) {
