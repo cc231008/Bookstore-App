@@ -4,7 +4,6 @@ import android.util.Log
 import edu.cc231008.bookstoreapp.data.db.BookDAO
 import edu.cc231008.bookstoreapp.data.db.BookEntity
 import edu.cc231008.bookstoreapp.data.remote.BookRemoteService
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class BookRepository(
@@ -54,6 +53,7 @@ class BookRepository(
             }
         }
 
+    //This function searches for books by title (searchQuery)
     suspend fun searchBooks(searchQuery: String): List<BookTemplate> {
         val books = bookDAO.searchBooksByTitle(searchQuery)
 

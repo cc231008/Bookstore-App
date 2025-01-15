@@ -13,11 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+//sealed classes are used to represent a fixed set of related values (e.g. Home, Cart, Wishlist)
 sealed class BottomNavItem(
     val route: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector,
     val label: String
 ) {
+    //"data object" ensures that only one instance for each navigation item is created
     data object Home : BottomNavItem("home", Icons.Default.Home, "Home")
     data object Cart : BottomNavItem("cart", Icons.Default.ShoppingCart, "Cart")
     data object Wishlist : BottomNavItem("wishlist", Icons.Default.Favorite, "Wishlist")
@@ -35,6 +37,7 @@ fun BottomNavBar(
         containerColor = Color(0xFF704214),
         contentColor = Color.White
     ) {
+
         val items = listOf(
             BottomNavItem.Home,
             BottomNavItem.Cart,

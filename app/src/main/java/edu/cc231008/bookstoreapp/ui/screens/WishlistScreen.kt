@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import edu.cc231008.bookstoreapp.data.repo.BookTemplate
-import edu.cc231008.bookstoreapp.ui.BookCard
 
 @Composable
 fun WishlistScreen(
