@@ -1,11 +1,13 @@
 package edu.cc231008.bookstoreapp.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import edu.cc231008.bookstoreapp.data.repo.BookTemplate
@@ -17,7 +19,9 @@ fun WishlistScreen(
 ) {
     // Display a vertically scrollable list of wishlist books
     LazyColumn(
-        modifier = Modifier.fillMaxSize(), // Fills the entire screen
+        modifier = Modifier
+            .fillMaxSize() // Fills the entire screen
+            .background(Color(0xFFF5F5DC)), // Adds the background color
         verticalArrangement = Arrangement.spacedBy(8.dp) // Adds spacing between items
     ) {
         // Loop through each book in the wishlist and display it as a card

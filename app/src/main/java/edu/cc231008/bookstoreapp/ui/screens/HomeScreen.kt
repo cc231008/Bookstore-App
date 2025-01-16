@@ -14,7 +14,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import edu.cc231008.bookstoreapp.data.repo.BookTemplate
@@ -30,31 +32,44 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .background(Color(0xFFF5F5DC))
     ) {
+
         // Displays the title of the app
-        Text(
-            text = "Bookstore",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Function for searching books
-        SearchBook(onSearchClick)
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Displays a list of books
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp) // Adjusted height for proper header appearance
+                .background(Color(0xFF704214)) // Brown stripe
         ) {
-            // Loops through the list of books
-            items(books) { book ->
-                // A book card
-                BookCard(book = book, onClick = { onBookClick(book)})
+            Text(
+                text = "Bookstore",
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 28.sp, // Larger font size
+                    color = Color.White // White text color
+                ),
+                modifier = Modifier.align(Alignment.Center) // Center the text both horizontally and vertically
+            )
+        }
+
+        // Search and books content
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp) // Horizontal padding for better spacing
+        ) {
+            SearchBook(onSearchClick)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(books) { book ->
+                    BookCard(book = book, onClick = { onBookClick(book) })
+                }
             }
         }
     }
@@ -66,10 +81,13 @@ fun BookCard(book: BookTemplate, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color(0xFFF5F5DC))
             .padding(horizontal = 8.dp, vertical = 4.dp),
         onClick = onClick,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFD7C5A1) // Sets the background color of the cards
+        )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
