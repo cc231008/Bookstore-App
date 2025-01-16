@@ -13,3 +13,16 @@ data class BookEntity(
     val image: String,
     val url: String
 )
+
+//The table for wishlist
+@Entity(tableName = "wishlist")
+data class WishlistEntity(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val isbn13: String,
+    val title: String,
+    val subtitle: String,
+    val price: String,
+    val image: String,
+    val url: String
+)

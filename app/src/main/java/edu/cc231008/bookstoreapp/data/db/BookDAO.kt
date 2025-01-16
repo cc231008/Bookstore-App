@@ -21,4 +21,13 @@ interface BookDAO {
     @Query("SELECT * FROM books WHERE title LIKE '%' || :searchQuery || '%' ORDER BY title ASC")
     suspend fun searchBooksByTitle(searchQuery: String): List<BookEntity>
 
+    //This function fetches a book by its ISBN (=id)
+    @Query("SELECT * FROM books WHERE isbn13 = :isbn13")
+    suspend fun getBookById(isbn13: String): BookEntity
+
+    @Query("SELECT * FROM wishlist")
+    suspend fun getBookFromWishlist(): List<WishlistEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertWishlist(wishlist: WishlistEntity)
 }

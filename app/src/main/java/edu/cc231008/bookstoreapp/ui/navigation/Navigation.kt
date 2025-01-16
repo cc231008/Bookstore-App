@@ -20,8 +20,7 @@ import edu.cc231008.bookstoreapp.ui.screens.*
 fun AppNavigation(
     navController: NavHostController,
     books: List<BookTemplate>,
-    wishlistBooks: List<BookTemplate>,
-    onSearchResult: (String) -> Unit
+    onSearchResult: (String) -> Unit,
 ) {
 
     var currentRoute by remember { mutableStateOf("home") }
@@ -67,14 +66,14 @@ fun AppNavigation(
                 )
             }
             composable(route = "wishlist") {
-                WishlistScreen(navController = navController, wishlistBooks = wishlistBooks)
+                WishlistScreen(navController = navController)
             }
             composable(route = "cart") {
                 CartScreen(navController = navController)
             }
             composable(route = "details/{bookId}") { backStackEntry ->
                 val bookId = backStackEntry.arguments?.getString("bookId") ?: ""
-                BookDetailsScreen(bookId = bookId)
+                BookDetailsScreen(bookId)
             }
             composable(route = "checkout") {
                 CheckoutScreen(navController = navController)
