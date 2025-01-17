@@ -1,9 +1,11 @@
 package edu.cc231008.bookstoreapp.data.db
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 //We use dao to control the database by fetching, inserting, updating or deleting data.
@@ -21,4 +23,28 @@ interface BookDAO {
     @Query("SELECT * FROM books WHERE title LIKE '%' || :searchQuery || '%' ORDER BY title ASC")
     suspend fun searchBooksByTitle(searchQuery: String): List<BookEntity>
 
+    //This function fetches a book by its ISBN (=id)
+    @Query("SELECT * FROM books WHERE isbn13 = :isbn13")
+    suspend fun getBookById(isbn13: String): BookEntity
+
+    @Query("SELECT * FROM wishlist")
+    suspend fun getBookFromWishlist(): List<WishlistEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertWishlist(wishlist: WishlistEntity)
+
+    @Query("SELECT * FROM comments WHERE isbn13 = :isbn13")
+    suspend fun getCommentsByIsbn13(isbn13: String): List<CommentEntity>
+
+    @Query("SELECT * FROM comments WHERE id = :id")
+    suspend fun getCommentById(id: String): CommentEntity
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertComment(comment: CommentEntity)
+
+    @Delete
+    suspend fun deleteComment(comment: CommentEntity)
+
+    @Update
+    suspend fun updateComment(comment: CommentEntity)
 }

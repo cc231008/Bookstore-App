@@ -1,13 +1,14 @@
 package edu.cc231008.bookstoreapp.ui.navigation
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -19,16 +20,11 @@ import edu.cc231008.bookstoreapp.ui.screens.*
 fun AppNavigation(
     navController: NavHostController,
     books: List<BookTemplate>,
-    wishlistBooks: List<BookTemplate>,
     onSearchResult: (String) -> Unit
 ) {
     // Tracks the current route in the navigation system
     var currentRoute by remember { mutableStateOf("home") }
 
-    // Controls the visibility of content and bottom navigation bar
-    var showContent by remember { mutableStateOf(false) }
-
-    // Synchronize the visibility state and track the current route
     LaunchedEffect(navController) {
         navController.currentBackStackEntryFlow.collect { backStackEntry ->
             currentRoute = backStackEntry.destination.route ?: "home" // Default to "home" if route is null
@@ -88,10 +84,7 @@ fun AppNavigation(
             }
             // Define the "wishlist" screen destination
             composable(route = "wishlist") {
-                WishlistScreen(
-                    navController = navController,
-                    wishlistBooks = wishlistBooks // Pass the wishlist books to display
-                )
+                WishlistScreen(navController = navController)
             }
             // Define the "cart" screen destination
             composable(route = "cart") {
@@ -101,11 +94,21 @@ fun AppNavigation(
             composable(route = "details/{bookId}") { backStackEntry ->
                 val bookId = backStackEntry.arguments?.getString("bookId") ?: "" // Retrieve bookId from arguments
                 BookDetailsScreen(bookId = bookId) // Pass the bookId to display book details
+            composable(route = "details/{bookId}") {
+                BookDetailsScreen(
+                    navController = navController,
+                    onEditComment = {
+                        comment ->
+                        navController.navigate("editComment/${comment.id}")
+                    }
+                    )
             }
-            // Define the "checkout" screen destination
             composable(route = "checkout") {
                 CheckoutScreen(navController = navController) // Pass the navController for navigation
             }
+            composable(route = "editComment/{commentId}") {
+                val commentId = it.arguments?.getString("commentId") ?: ""
+                EditCommentScreen(commentId = commentId, navController = navController)
         }
     }
 }
