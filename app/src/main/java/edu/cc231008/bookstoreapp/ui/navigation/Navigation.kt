@@ -1,5 +1,9 @@
 package edu.cc231008.bookstoreapp.ui.navigation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -25,9 +29,13 @@ fun AppNavigation(
     // Tracks the current route in the navigation system
     var currentRoute by remember { mutableStateOf("home") }
 
+    // Controls the visibility of content and bottom navigation bar
+    var showContent by remember { mutableStateOf(false) }
+
     LaunchedEffect(navController) {
         navController.currentBackStackEntryFlow.collect { backStackEntry ->
-            currentRoute = backStackEntry.destination.route ?: "home" // Default to "home" if route is null
+            currentRoute =
+                backStackEntry.destination.route ?: "home" // Default to "home" if route is null
             android.util.Log.d("AppNavigation", "Current Route Updated: $currentRoute")
             showContent = currentRoute != "welcome" // Hide navbar on the Welcome screen
         }
@@ -49,7 +57,8 @@ fun AppNavigation(
                             if (route != currentRoute) {
                                 navController.navigate(route) {
                                     launchSingleTop = true // Avoid creating duplicate destinations
-                                    restoreState = true   // Restore the state of previous destinations
+                                    restoreState =
+                                        true   // Restore the state of previous destinations
                                 }
                             }
                         }
@@ -91,17 +100,13 @@ fun AppNavigation(
                 CartScreen(navController = navController) // Pass the navController for navigation
             }
             // Define the "details" screen destination with a dynamic bookId parameter
-            composable(route = "details/{bookId}") { backStackEntry ->
-                val bookId = backStackEntry.arguments?.getString("bookId") ?: "" // Retrieve bookId from arguments
-                BookDetailsScreen(bookId = bookId) // Pass the bookId to display book details
             composable(route = "details/{bookId}") {
                 BookDetailsScreen(
                     navController = navController,
-                    onEditComment = {
-                        comment ->
+                    onEditComment = { comment ->
                         navController.navigate("editComment/${comment.id}")
                     }
-                    )
+                )
             }
             composable(route = "checkout") {
                 CheckoutScreen(navController = navController) // Pass the navController for navigation
@@ -109,6 +114,7 @@ fun AppNavigation(
             composable(route = "editComment/{commentId}") {
                 val commentId = it.arguments?.getString("commentId") ?: ""
                 EditCommentScreen(commentId = commentId, navController = navController)
+            }
         }
     }
 }
