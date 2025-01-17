@@ -1,11 +1,18 @@
 package edu.cc231008.bookstoreapp.ui.screens
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -24,6 +31,9 @@ fun BookDetailsScreen(
 ) {
     val state by bookDetailViewModel.bookDetailUiState.collectAsStateWithLifecycle()
     val book = state.book
+    val comments by bookDetailViewModel.comments.collectAsStateWithLifecycle()
+    var commentText by remember { mutableStateOf("") }
+
     // This composable displays details for a specific book based on the provided bookId
     // Currently it only shows a simple text with the book ID
     Column() {
@@ -33,7 +43,7 @@ fun BookDetailsScreen(
         )
         Text(
             text = book.price,
-            modifier = androidx.compose.ui.Modifier.padding(top = 8.dp)
+            modifier = Modifier.padding(top = 8.dp)
         )
 
         Button(
@@ -50,6 +60,40 @@ fun BookDetailsScreen(
         ) {
             Text("Add to Wishlist")
         }
-    }
+
+        TextField(
+            value = commentText,
+            onValueChange = { commentText = it },
+            label = { Text("Add a comment") }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = {
+                bookDetailViewModel.addComment(commentText)
+                commentText = ""
+            }
+            ) {
+            Text("Add Comment")
         }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(text = "Comments:")
+        Spacer(modifier = Modifier.height(8.dp))
+        comments.forEach { comment ->
+            Text(text = comment.comment)
+            Spacer(modifier = Modifier.height(4.dp))
+            Button(
+                onClick = {
+                    bookDetailViewModel.deleteComment(comment)
+                }
+            ) {
+                Text("Delete Comment")
+            }
+
+    }
+    }
+}
 

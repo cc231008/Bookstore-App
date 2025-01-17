@@ -3,6 +3,7 @@ package edu.cc231008.bookstoreapp.data.repo
 import android.util.Log
 import edu.cc231008.bookstoreapp.data.db.BookDAO
 import edu.cc231008.bookstoreapp.data.db.BookEntity
+import edu.cc231008.bookstoreapp.data.db.CommentEntity
 import edu.cc231008.bookstoreapp.data.db.WishlistEntity
 import edu.cc231008.bookstoreapp.data.remote.BookRemoteService
 import kotlinx.coroutines.flow.map
@@ -109,4 +110,29 @@ class BookRepository(
             url = url
         ))
     }
+
+    suspend fun getCommentsForBook(isbn13: String): List<CommentEntity> {
+        return bookDAO.getCommentsByIsbn13(isbn13).map {
+            CommentEntity(
+                id = it.id,
+                isbn13 = it.isbn13,
+                comment = it.comment
+            )
+        }
+    }
+
+    suspend fun addComment(isbn13: String, comment: String) {
+        bookDAO.insertComment(
+            CommentEntity(
+                isbn13 = isbn13,
+                comment = comment
+            )
+        )
+    }
+
+    suspend fun deleteComment(comment: CommentEntity) {
+        bookDAO.deleteComment(comment)
+    }
+
+
     }

@@ -20,3 +20,9 @@ data class WishlistTemplate(
     val image: String,
     val url: String
 )
+
+data class CommentTemplate(
+    val id: Int,
+    val isbn13: String,
+    val comment: String
+)

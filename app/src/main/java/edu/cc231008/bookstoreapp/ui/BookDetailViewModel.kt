@@ -3,6 +3,7 @@ package edu.cc231008.bookstoreapp.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import edu.cc231008.bookstoreapp.data.db.CommentEntity
 import edu.cc231008.bookstoreapp.data.db.WishlistEntity
 import edu.cc231008.bookstoreapp.data.repo.BookRepository
 import edu.cc231008.bookstoreapp.data.repo.BookTemplate
@@ -33,10 +34,23 @@ class BookDetailViewModel(
     )
     val bookDetailUiState = _bookDetailUiState.asStateFlow()
 
+    private val _comments = MutableStateFlow<List<CommentEntity>>(emptyList())
+    val comments = _comments.asStateFlow()
+
+    private suspend fun updateComments() {
+            val commentsUpdated = repository.getCommentsForBook(bookId)
+            _comments.value = commentsUpdated
+    }
+
     init {
             viewModelScope.launch {
                 val book = repository.fetchBookById(bookId)
-                _bookDetailUiState.update { it.copy(book = book) }
+                _bookDetailUiState.update {
+                    it.copy(book = book)
+                }
+            }
+        viewModelScope.launch {
+        updateComments()
             }
     }
 
@@ -52,4 +66,21 @@ class BookDetailViewModel(
             )
         }
     }
+
+    fun addComment(comment: String) {
+        viewModelScope.launch {
+            repository.addComment(
+                isbn13 = bookId,
+                comment = comment
+            )
+            updateComments()
+        }
+    }
+    fun deleteComment(comment: CommentEntity) {
+        viewModelScope.launch {
+            repository.deleteComment(comment)
+            updateComments()
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 package edu.cc231008.bookstoreapp.data.db
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -30,4 +31,13 @@ interface BookDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWishlist(wishlist: WishlistEntity)
+
+    @Query("SELECT * FROM comments WHERE isbn13 = :isbn13")
+    suspend fun getCommentsByIsbn13(isbn13: String): List<CommentEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertComment(comment: CommentEntity)
+
+    @Delete
+    suspend fun deleteComment(comment: CommentEntity)
 }
