@@ -71,13 +71,22 @@ fun AppNavigation(
             composable(route = "cart") {
                 CartScreen(navController = navController)
             }
-            composable(route = "details/{bookId}") { backStackEntry ->
-                val bookId = backStackEntry.arguments?.getString("bookId") ?: ""
-                BookDetailsScreen(bookId)
+            composable(route = "details/{bookId}") {
+                BookDetailsScreen(
+                    navController = navController,
+                    onEditComment = {
+                        comment ->
+                        navController.navigate("editComment/${comment.id}")
+                    }
+                    )
             }
             composable(route = "checkout") {
                 CheckoutScreen(navController = navController)
             }
+            composable(route = "editComment/{commentId}") {
+                val commentId = it.arguments?.getString("commentId") ?: ""
+                EditCommentScreen(commentId = commentId, navController = navController)
         }
     }
+}
 }

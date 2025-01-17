@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 //We use dao to control the database by fetching, inserting, updating or deleting data.
@@ -35,9 +36,15 @@ interface BookDAO {
     @Query("SELECT * FROM comments WHERE isbn13 = :isbn13")
     suspend fun getCommentsByIsbn13(isbn13: String): List<CommentEntity>
 
+    @Query("SELECT * FROM comments WHERE id = :id")
+    suspend fun getCommentById(id: String): CommentEntity
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertComment(comment: CommentEntity)
 
     @Delete
     suspend fun deleteComment(comment: CommentEntity)
+
+    @Update
+    suspend fun updateComment(comment: CommentEntity)
 }

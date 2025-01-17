@@ -20,9 +20,7 @@ class BookDetailViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val repository: BookRepository,
 ) : ViewModel() {
-
     private val bookId: String = checkNotNull(savedStateHandle["bookId"])
-
     private val _bookDetailUiState = MutableStateFlow(BookDetailUiState(BookTemplate(
             title = "",
             subtitle = "",
@@ -33,25 +31,20 @@ class BookDetailViewModel(
     ))
     )
     val bookDetailUiState = _bookDetailUiState.asStateFlow()
-
     private val _comments = MutableStateFlow<List<CommentEntity>>(emptyList())
     val comments = _comments.asStateFlow()
 
-    private suspend fun updateComments() {
-            val commentsUpdated = repository.getCommentsForBook(bookId)
-            _comments.value = commentsUpdated
-    }
-
     init {
             viewModelScope.launch {
-                val book = repository.fetchBookById(bookId)
-                _bookDetailUiState.update {
-                    it.copy(book = book)
-                }
+                    val book = repository.fetchBookById(bookId)
+                    _bookDetailUiState.update { it.copy(book = book) }
+                    updateComments()
             }
-        viewModelScope.launch {
-        updateComments()
-            }
+    }
+
+    suspend fun updateComments() {
+        val commentsUpdated = repository.getCommentsForBook(bookId)
+        _comments.value = commentsUpdated
     }
 
     fun addBookToWishlist(book: WishlistEntity) {
@@ -82,5 +75,6 @@ class BookDetailViewModel(
             updateComments()
         }
     }
+
 
 }

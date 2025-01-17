@@ -1,4 +1,4 @@
-package edu.cc231008.bookstoreapp.data
+package edu.cc231008.bookstoreapp.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

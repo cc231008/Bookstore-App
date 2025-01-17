@@ -5,7 +5,6 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import edu.cc231008.bookstoreapp.BookApplication
-import edu.cc231008.bookstoreapp.data.WishListViewModel
 
 //This part provides ViewModels that will have necessary data from the Repository to display it on the screen.
 object AppViewModelProvider {
@@ -28,6 +27,16 @@ object AppViewModelProvider {
         initializer {
             val bookApplication = this[APPLICATION_KEY] as BookApplication
             WishListViewModel(bookApplication.bookRepository)
+        }
+    }
+
+    val editCommentFactory = viewModelFactory {
+        initializer {
+            val bookApplication = this[APPLICATION_KEY] as BookApplication
+            EditCommentViewModel(
+                this.createSavedStateHandle(),
+                bookApplication.bookRepository
+            )
         }
     }
 }

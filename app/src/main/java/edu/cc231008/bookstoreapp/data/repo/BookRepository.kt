@@ -121,6 +121,10 @@ class BookRepository(
         }
     }
 
+    suspend fun getCommentId (id: String): CommentEntity {
+        return bookDAO.getCommentById(id)
+    }
+
     suspend fun addComment(isbn13: String, comment: String) {
         bookDAO.insertComment(
             CommentEntity(
@@ -132,6 +136,10 @@ class BookRepository(
 
     suspend fun deleteComment(comment: CommentEntity) {
         bookDAO.deleteComment(comment)
+    }
+
+    suspend fun editComment(comment: CommentEntity) {
+        bookDAO.updateComment(comment)
     }
 
 

@@ -8,35 +8,56 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import edu.cc231008.bookstoreapp.data.db.CommentEntity
 import edu.cc231008.bookstoreapp.data.db.WishlistEntity
 import edu.cc231008.bookstoreapp.ui.AppViewModelProvider
 import edu.cc231008.bookstoreapp.ui.BookDetailViewModel
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 
 @Composable
 fun BookDetailsScreen(
-    bookId: String,
-    bookDetailViewModel: BookDetailViewModel = viewModel(factory = AppViewModelProvider.DetailFactory),
+    onEditComment: (CommentEntity) -> Unit,
+    navController: NavHostController,
+    bookDetailViewModel: BookDetailViewModel = viewModel(factory = AppViewModelProvider.DetailFactory,
+    ),
 ) {
     val state by bookDetailViewModel.bookDetailUiState.collectAsStateWithLifecycle()
     val book = state.book
     val comments by bookDetailViewModel.comments.collectAsStateWithLifecycle()
     var commentText by remember { mutableStateOf("") }
 
-    // This composable displays details for a specific book based on the provided bookId
-    // Currently it only shows a simple text with the book ID
-    Column() {
+    // Listen for the result from EditCommentScreen
+    val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
+    val commentEdited = savedStateHandle?.get<Boolean>("commentEdited") ?: false
+
+    LaunchedEffect(commentEdited) {
+        if (commentEdited) {
+            bookDetailViewModel.updateComments()
+            savedStateHandle?.set("commentEdited", false)
+        }
+    }
+
+    Column {
         Text(
             text = book.title,
             style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
@@ -47,16 +68,18 @@ fun BookDetailsScreen(
         )
 
         Button(
-            onClick = {bookDetailViewModel.addBookToWishlist(
-                book = WishlistEntity(
-                    isbn13 = book.isbn13,
-                    title = book.title,
-                    subtitle = book.subtitle,
-                    price = book.price,
-                    image = book.image,
-                    url = book.url
+            onClick = {
+                bookDetailViewModel.addBookToWishlist(
+                    book = WishlistEntity(
+                        isbn13 = book.isbn13,
+                        title = book.title,
+                        subtitle = book.subtitle,
+                        price = book.price,
+                        image = book.image,
+                        url = book.url
+                    )
                 )
-            ) }
+            }
         ) {
             Text("Add to Wishlist")
         }
@@ -73,7 +96,7 @@ fun BookDetailsScreen(
                 bookDetailViewModel.addComment(commentText)
                 commentText = ""
             }
-            ) {
+        ) {
             Text("Add Comment")
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -92,8 +115,24 @@ fun BookDetailsScreen(
             ) {
                 Text("Delete Comment")
             }
+            Spacer(modifier = Modifier.height(4.dp))
 
+            Button(
+                onClick = {
+                    onEditComment(comment)
+                }
+            ) {
+                Text("Edit Comment")
+            }
+        }
     }
+}
+
+fun <T> LiveData<T>.asFlow(): Flow<T?> = callbackFlow {
+    val observer = Observer<T> { value ->
+        trySend(value).isSuccess
     }
+    observeForever(observer)
+    awaitClose { removeObserver(observer) }
 }
 
