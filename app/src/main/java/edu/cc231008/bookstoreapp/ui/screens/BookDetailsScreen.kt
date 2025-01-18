@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import edu.cc231008.bookstoreapp.data.db.CartEntity
 import edu.cc231008.bookstoreapp.data.db.CommentEntity
 import edu.cc231008.bookstoreapp.data.db.WishlistEntity
 import edu.cc231008.bookstoreapp.ui.AppViewModelProvider
@@ -76,6 +77,24 @@ fun BookDetailsScreen(
         ) {
             Text("Add to Wishlist")
         }
+        Button(
+            onClick = {
+                bookDetailViewModel.addBookToCart(
+                    book = CartEntity(
+                        isbn13 = book.isbn13,
+                        title = book.title,
+                        subtitle = book.subtitle,
+                        price = book.price,
+                        image = book.image,
+                        url = book.url
+                    )
+                )
+            }
+        ) {
+            Text("Add to Shopping Cart")
+        }
+
+
 
         TextField(
             value = commentText,

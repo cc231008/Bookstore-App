@@ -1,10 +1,23 @@
 package edu.cc231008.bookstoreapp.ui.screens
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import edu.cc231008.bookstoreapp.ui.AppViewModelProvider
+import edu.cc231008.bookstoreapp.ui.CheckoutViewModel
 
 @Composable
-fun CheckoutScreen(navController: NavHostController) {
-    // We'll add the payment and order confirmation details here in the future
-    // You can also use the navController to navigate back to the cart or to a success screen
+fun CheckoutScreen(
+    checkoutViewModel: CheckoutViewModel = viewModel(factory = AppViewModelProvider.checkoutFactory),
+) {
+    val state = checkoutViewModel.cart.collectAsStateWithLifecycle()
+    val cart = state.value
+
+    Column {
+        Text(cart.title)
+        Text(cart.subtitle)
+        Text(cart.price)
+    }
 }

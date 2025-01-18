@@ -3,6 +3,7 @@ package edu.cc231008.bookstoreapp.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import edu.cc231008.bookstoreapp.data.db.CartEntity
 import edu.cc231008.bookstoreapp.data.db.CommentEntity
 import edu.cc231008.bookstoreapp.data.db.WishlistEntity
 import edu.cc231008.bookstoreapp.data.repo.BookRepository
@@ -76,5 +77,17 @@ class BookDetailViewModel(
         }
     }
 
+    fun addBookToCart(book: CartEntity) {
+        viewModelScope.launch {
+            repository.insertCart(
+                isbn13 = book.isbn13,
+                title = book.title,
+                subtitle = book.subtitle,
+                price = book.price,
+                image = book.image,
+                url = book.url
+            )
+        }
+    }
 
 }

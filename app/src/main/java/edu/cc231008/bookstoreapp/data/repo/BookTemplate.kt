@@ -21,8 +21,20 @@ data class WishlistTemplate(
     val url: String
 )
 
+data class CartTemplate(
+    val id: Int,
+    val isbn13: String,
+    val title: String,
+    val subtitle: String,
+    val price: String,
+    val image: String,
+    val url: String
+)
+
+/*
 data class CommentTemplate(
     val id: Int,
     val isbn13: String,
     val comment: String
 )
+ */

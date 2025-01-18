@@ -97,7 +97,11 @@ fun AppNavigation(
             }
             // Define the "cart" screen destination
             composable(route = "cart") {
-                CartScreen(navController = navController) // Pass the navController for navigation
+                CartScreen(
+                    onBookClick = { book ->
+                        navController.navigate("checkout/${book.id}")
+                    }
+                ) // Pass the navController for navigation
             }
             // Define the "details" screen destination with a dynamic bookId parameter
             composable(route = "details/{bookId}") {
@@ -108,13 +112,14 @@ fun AppNavigation(
                     }
                 )
             }
-            composable(route = "checkout") {
-                CheckoutScreen(navController = navController) // Pass the navController for navigation
+            composable(route = "checkout/{cartId}") {
+                CheckoutScreen() // Pass the navController for navigation
             }
             composable(route = "editComment/{commentId}") {
                 val commentId = it.arguments?.getString("commentId") ?: ""
                 EditCommentScreen(commentId = commentId, navController = navController)
             }
+
         }
     }
 }

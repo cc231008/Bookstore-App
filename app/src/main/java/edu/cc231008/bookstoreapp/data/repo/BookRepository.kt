@@ -3,6 +3,7 @@ package edu.cc231008.bookstoreapp.data.repo
 import android.util.Log
 import edu.cc231008.bookstoreapp.data.db.BookDAO
 import edu.cc231008.bookstoreapp.data.db.BookEntity
+import edu.cc231008.bookstoreapp.data.db.CartEntity
 import edu.cc231008.bookstoreapp.data.db.CommentEntity
 import edu.cc231008.bookstoreapp.data.db.WishlistEntity
 import edu.cc231008.bookstoreapp.data.remote.BookRemoteService
@@ -142,5 +143,44 @@ class BookRepository(
         bookDAO.updateComment(comment)
     }
 
-
+    suspend fun getCartItems(): List<CartTemplate> {
+        return bookDAO.getCartItems().map { entity ->
+            CartTemplate(
+                id = entity.id,
+                isbn13 = entity.isbn13,
+                title = entity.title,
+                subtitle = entity.subtitle,
+                price = entity.price,
+                image = entity.image,
+                url = entity.url
+            )
+        }
     }
+
+    suspend fun insertCart(isbn13: String, title: String, subtitle: String, price: String, image: String, url: String) {
+        bookDAO.insertCart(
+            CartEntity(
+            id = 0,
+            isbn13 = isbn13,
+            title = title,
+            subtitle = subtitle,
+            price = price,
+            image = image,
+            url = url
+        )
+        )
+    }
+    suspend fun getCartById(id: String): CartTemplate {
+        val cart = bookDAO.getCartById(id)
+
+        return CartTemplate(
+            id = cart.id,
+            isbn13 = cart.isbn13,
+            title = cart.title,
+            subtitle = cart.subtitle,
+            price = cart.price,
+            image = cart.image,
+            url = cart.url
+        )
+    }
+}

@@ -39,4 +39,19 @@ object AppViewModelProvider {
             )
         }
     }
+    val cartFactory = viewModelFactory {
+        initializer {
+            val bookApplication = this[APPLICATION_KEY] as BookApplication
+            CartViewModel(bookApplication.bookRepository)
+        }
+    }
+    val checkoutFactory = viewModelFactory {
+        initializer {
+            val bookApplication = this[APPLICATION_KEY] as BookApplication
+            CheckoutViewModel(
+                this.createSavedStateHandle(),
+                bookApplication.bookRepository
+            )
+        }
+    }
 }

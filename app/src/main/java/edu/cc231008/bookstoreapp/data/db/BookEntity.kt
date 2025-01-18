@@ -31,6 +31,19 @@ data class WishlistEntity(
     val url: String
 )
 
+//The table for cart
+@Entity(tableName = "cart")
+data class CartEntity(
+    @PrimaryKey
+    val id: Int = 0,
+    val isbn13: String,
+    val title: String,
+    val subtitle: String,
+    val price: String,
+    val image: String,
+    val url: String
+)
+
 @Entity(
     tableName = "comments",
     foreignKeys = [

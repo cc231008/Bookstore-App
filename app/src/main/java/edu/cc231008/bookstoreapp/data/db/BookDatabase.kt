@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 //This part helps to initialize the Database
-@Database(entities = [BookEntity::class, WishlistEntity::class, CommentEntity::class], version = 8)
+@Database(entities = [BookEntity::class, WishlistEntity::class, CommentEntity::class, CartEntity::class], version = 9)
 abstract class BookDatabase: RoomDatabase() {
     abstract fun bookDao(): BookDAO
 

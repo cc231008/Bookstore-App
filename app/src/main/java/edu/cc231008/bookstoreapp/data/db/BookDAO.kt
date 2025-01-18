@@ -47,4 +47,13 @@ interface BookDAO {
 
     @Update
     suspend fun updateComment(comment: CommentEntity)
+
+    @Query("SELECT * FROM cart")
+    suspend fun getCartItems(): List<CartEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCart(cart: CartEntity)
+
+    @Query("SELECT * FROM cart WHERE id = :id")
+    suspend fun getCartById(id: String): CartEntity
 }
