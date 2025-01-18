@@ -24,7 +24,7 @@ import edu.cc231008.bookstoreapp.ui.screens.*
 fun AppNavigation(
     navController: NavHostController,
     books: List<BookTemplate>,
-    onSearchResult: (String) -> Unit
+    onSearchResult: (String) -> Unit,
 ) {
     // Tracks the current route in the navigation system
     var currentRoute by remember { mutableStateOf("home") }
@@ -83,11 +83,11 @@ fun AppNavigation(
             composable(route = "home") {
                 AnimatedHomeScreen(
                     books = books, // Pass the list of books
+                    onSearchChange = { query ->
+                        onSearchResult(query)
+                    },
                     onBookClick = { book -> // Handle book clicks
                         navController.navigate(route = "details/${book.isbn13}") // Navigate to details screen
-                    },
-                    onSearchClick = { query -> // Handle search action
-                        onSearchResult(query) // Pass the query to the search handler
                     }
                 )
             }
@@ -119,7 +119,6 @@ fun AppNavigation(
                 val commentId = it.arguments?.getString("commentId") ?: ""
                 EditCommentScreen(commentId = commentId, navController = navController)
             }
-
         }
     }
 }

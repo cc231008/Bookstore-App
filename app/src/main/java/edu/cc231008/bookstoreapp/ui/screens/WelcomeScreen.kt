@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import edu.cc231008.bookstoreapp.R
 import kotlinx.coroutines.delay
 
@@ -31,7 +32,15 @@ fun WelcomeScreen(
     // States to control the visibility of the welcome screen and loading screen
     var showWelcomeScreen by remember { mutableStateOf(true) }
     var showLoadingScreen by remember { mutableStateOf(false) }
+    val systemUiController = rememberSystemUiController()
+    val statusBarColor = Color(0xFFF5F5DC)
 
+    LaunchedEffect(Unit) {
+        systemUiController.setStatusBarColor(
+            color = statusBarColor,
+            darkIcons = false
+        )
+    }
     // A full-screen container with a beige background
     Box(
         modifier = Modifier

@@ -44,7 +44,6 @@ fun WishlistScreen(
                 text = "Bookstore",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
             )
@@ -57,7 +56,6 @@ fun WishlistScreen(
             text = "Wishlist:",
             style = MaterialTheme.typography.titleMedium.copy(
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
                 color = Color.Black
             ),
             modifier = Modifier.padding(horizontal = 16.dp)

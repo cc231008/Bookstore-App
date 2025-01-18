@@ -60,6 +60,7 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
     implementation("androidx.room:room-runtime:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
 
     // Retrofit
     val retrofit_version = "2.11.0"

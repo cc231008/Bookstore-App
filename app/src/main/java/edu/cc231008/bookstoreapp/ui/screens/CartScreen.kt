@@ -44,7 +44,6 @@ fun CartScreen(
                 text = "Bookstore",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
             )
