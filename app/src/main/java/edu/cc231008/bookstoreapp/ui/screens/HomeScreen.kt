@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +27,7 @@ import kotlinx.coroutines.delay
 fun HomeScreen(
     books: List<BookTemplate>,
     onBookClick: (BookTemplate) -> Unit,
+    onResetClick: () -> Unit,
     onSearchClick: (String) -> Unit
 ) {
     // The main layout for the Home Screen
@@ -59,9 +61,13 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp) // Padding for better alignment and spacing
         ) {
-            SearchBook(onSearchClick) // Search bar component
+            SearchBook(
+                onResetClick = onResetClick,
+                onSearchClick = onSearchClick
+            ) // Search bar component
 
             Spacer(modifier = Modifier.height(16.dp)) // Spacing between the search bar and the book list
+
 
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -106,9 +112,11 @@ fun BookCard(book: BookTemplate, onClick: () -> Unit) {
 }
 
 @Composable
-fun SearchBook(onSearchClick: (String) -> Unit) {
+fun SearchBook(
+    onResetClick: () -> Unit,
+    onSearchClick: (String) -> Unit) {
     // State to hold the current query in the search bar
-    var searchQuery by remember { mutableStateOf("") }
+    var searchQuery by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -151,6 +159,8 @@ fun SearchBook(onSearchClick: (String) -> Unit) {
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                             )
                         )
+                        Spacer(modifier = Modifier.height(8.dp))
+
                     }
                     innerTextField() // Displays the entered text
                 }
@@ -164,6 +174,13 @@ fun SearchBook(onSearchClick: (String) -> Unit) {
         ) {
             Text("Search")
         }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = { onResetClick() },
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) {
+            Text("Reset")
+        }
     }
 }
 
@@ -171,7 +188,8 @@ fun SearchBook(onSearchClick: (String) -> Unit) {
 fun AnimatedHomeScreen(
     books: List<BookTemplate>,
     onBookClick: (BookTemplate) -> Unit,
-    onSearchClick: (String) -> Unit
+    onSearchClick: (String) -> Unit,
+    onResetClick: () -> Unit
 ) {
     // State to control the visibility of the HomeScreen
     var showHomeScreen by remember { mutableStateOf(false) }
@@ -191,7 +209,8 @@ fun AnimatedHomeScreen(
         HomeScreen(
             books = books,
             onBookClick = onBookClick,
-            onSearchClick = onSearchClick
+            onSearchClick = onSearchClick,
+            onResetClick = onResetClick
         )
     }
 }

@@ -24,7 +24,8 @@ import edu.cc231008.bookstoreapp.ui.screens.*
 fun AppNavigation(
     navController: NavHostController,
     books: List<BookTemplate>,
-    onSearchResult: (String) -> Unit
+    onSearchResult: (String) -> Unit,
+    onResetClick: () -> Unit
 ) {
     // Tracks the current route in the navigation system
     var currentRoute by remember { mutableStateOf("home") }
@@ -88,6 +89,9 @@ fun AppNavigation(
                     },
                     onSearchClick = { query -> // Handle search action
                         onSearchResult(query) // Pass the query to the search handler
+                    },
+                    onResetClick = {
+                        onResetClick() // Reset the search when the reset button is clicked
                     }
                 )
             }
