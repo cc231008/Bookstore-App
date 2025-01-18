@@ -61,6 +61,19 @@ class BookDetailViewModel(
         }
     }
 
+    fun addBookToCart(book: CartEntity) {
+        viewModelScope.launch {
+            repository.insertCart(
+                isbn13 = book.isbn13,
+                title = book.title,
+                subtitle = book.subtitle,
+                price = book.price,
+                image = book.image,
+                url = book.url
+            )
+        }
+    }
+
     fun addComment(comment: String) {
         viewModelScope.launch {
             repository.addComment(
@@ -77,17 +90,6 @@ class BookDetailViewModel(
         }
     }
 
-    fun addBookToCart(book: CartEntity) {
-        viewModelScope.launch {
-            repository.insertCart(
-                isbn13 = book.isbn13,
-                title = book.title,
-                subtitle = book.subtitle,
-                price = book.price,
-                image = book.image,
-                url = book.url
-            )
-        }
-    }
+
 
 }

@@ -8,15 +8,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class CartViewModel(
-    private val bookRepository: BookRepository
-): ViewModel() {
+class CartViewModel(private val bookRepository: BookRepository): ViewModel() {
     private val _cartItems = MutableStateFlow<List<CartTemplate>>(emptyList())
     val cartItems: StateFlow<List<CartTemplate>> = _cartItems
 
     init {
         viewModelScope.launch {
-            _cartItems.value = bookRepository.getCartItems()
+            val cartItems = bookRepository.getCartItems()
+            _cartItems.value = cartItems
         }
     }
 }

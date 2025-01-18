@@ -41,7 +41,7 @@ class BookRepository(
         }
     }
 
-    //This variable that contains the list of all new books
+    //This variable that contains the list of all new books.
     var books = bookDAO.getAllBooks()
         .map { bookList ->
             bookList.map { entity ->
@@ -87,7 +87,7 @@ class BookRepository(
 
 
         suspend fun fetchWishlistBooks(): List<WishlistTemplate> {
-            return bookDAO.getBookFromWishlist().map { entity ->
+            return bookDAO.getBooksFromWishlist().map { entity ->
                 WishlistTemplate(
                     id = entity.id,
                     isbn13 = entity.isbn13,
@@ -100,17 +100,6 @@ class BookRepository(
             }
         }
 
-    suspend fun insertWishlist(isbn13: String, title: String, subtitle: String, price: String, image: String, url: String) {
-        bookDAO.insertWishlist(WishlistEntity(
-            id = 0,
-            isbn13 = isbn13,
-            title = title,
-            subtitle = subtitle,
-            price = price,
-            image = image,
-            url = url
-        ))
-    }
 
     suspend fun getCommentsForBook(isbn13: String): List<CommentEntity> {
         return bookDAO.getCommentsByIsbn13(isbn13).map {
@@ -157,9 +146,8 @@ class BookRepository(
         }
     }
 
-    suspend fun insertCart(isbn13: String, title: String, subtitle: String, price: String, image: String, url: String) {
-        bookDAO.insertCart(
-            CartEntity(
+    suspend fun insertWishlist(isbn13: String, title: String, subtitle: String, price: String, image: String, url: String) {
+        bookDAO.insertIntoWishlist(WishlistEntity(
             id = 0,
             isbn13 = isbn13,
             title = title,
@@ -167,8 +155,19 @@ class BookRepository(
             price = price,
             image = image,
             url = url
-        )
-        )
+        ))
+    }
+
+    suspend fun insertCart(isbn13: String, title: String, subtitle: String, price: String, image: String, url: String) {
+        bookDAO.insertCart(CartEntity(
+            id = 0,
+            isbn13 = isbn13,
+            title = title,
+            subtitle = subtitle,
+            price = price,
+            image = image,
+            url = url
+        ))
     }
     suspend fun getCartById(id: String): CartTemplate {
         val cart = bookDAO.getCartById(id)
