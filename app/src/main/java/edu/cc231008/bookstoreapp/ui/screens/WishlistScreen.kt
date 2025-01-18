@@ -18,14 +18,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import edu.cc231008.bookstoreapp.ui.WishListViewModel
 import edu.cc231008.bookstoreapp.data.repo.WishlistTemplate
 import edu.cc231008.bookstoreapp.ui.AppViewModelProvider
 
 @Composable
 fun WishlistScreen(
-    navController: NavHostController, // Controller to handle navigation between screens
+    onBookClick: (WishlistTemplate) -> Unit, // Controller to handle navigation between screens
     wishListViewModel: WishListViewModel = viewModel(factory = AppViewModelProvider.wishListFactory) // ViewModel for managing wishlist data
 ) {
 
@@ -39,15 +38,23 @@ fun WishlistScreen(
         verticalArrangement = Arrangement.spacedBy(8.dp) // Adds spacing between items
     ) {
         // Loop through each book in the wishlist and display it as a card
-        items(wishListBooks.value) { book ->
-            BookCardWishList(
-                book = book, // Pass the current book to the card
-                onClick = {
-                    // Navigate to the book details screen when the card is clicked
-                    navController.navigate(route = "details/${book.isbn13}")
-                }
-            )
+        if (wishListBooks.value.isNotEmpty()) {
+            items(wishListBooks.value) { book ->
+                BookCardWishList(
+                    book = book, // Pass the current book to the card
+                    onClick = {
+                        // Navigate to the book details screen when the card is clicked
+                        onBookClick(book)
+                    }
+                )
+            }
         }
+        else item {
+                Text(
+                    text = "No books found"
+                )
+            }
+
     }
     }
 

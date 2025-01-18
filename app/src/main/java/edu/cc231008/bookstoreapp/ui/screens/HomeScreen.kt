@@ -73,10 +73,18 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(8.dp) // Space between book items
             ) {
-                // Display each book using a BookCard
-                items(books) { book ->
-                    BookCard(book = book, onClick = { onBookClick(book) })
+                if (books.isNotEmpty()) {
+                    // Display each book using a BookCard
+                    items(books) { book ->
+                        BookCard(book = book, onClick = { onBookClick(book) })
+                    }
                 }
+                else item {
+                        Text(
+                            text = "No books found",
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                    }
             }
         }
     }
@@ -115,7 +123,12 @@ fun BookCard(book: BookTemplate, onClick: () -> Unit) {
 fun SearchBook(
     onResetClick: () -> Unit,
     onSearchClick: (String) -> Unit) {
-    // State to hold the current query in the search bar
+
+    // State to hold the current query in the search bar.
+    /*
+    "rememberSaveable" ensures the state survives configuration changes.
+    For example searchQuery will not be lost when the screen rotates, which can happen with "remember".
+     */
     var searchQuery by rememberSaveable { mutableStateOf("") }
 
     Column(

@@ -20,7 +20,7 @@ class EditCommentViewModel(
 
     init {
         viewModelScope.launch {
-            val comment = repository.getCommentId(commentId)
+            val comment = repository.getCommentById(commentId)
             _comment.value = comment
         }
     }

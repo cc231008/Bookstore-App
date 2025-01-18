@@ -3,11 +3,12 @@ package edu.cc231008.bookstoreapp.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import edu.cc231008.bookstoreapp.data.db.CartEntity
 import edu.cc231008.bookstoreapp.data.db.CommentEntity
-import edu.cc231008.bookstoreapp.data.db.WishlistEntity
 import edu.cc231008.bookstoreapp.data.repo.BookRepository
 import edu.cc231008.bookstoreapp.data.repo.BookTemplate
+import edu.cc231008.bookstoreapp.data.repo.CartTemplate
+import edu.cc231008.bookstoreapp.data.repo.CommentTemplate
+import edu.cc231008.bookstoreapp.data.repo.WishlistTemplate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -32,7 +33,8 @@ class BookDetailViewModel(
     ))
     )
     val bookDetailUiState = _bookDetailUiState.asStateFlow()
-    private val _comments = MutableStateFlow<List<CommentEntity>>(emptyList())
+
+    private val _comments = MutableStateFlow<List<CommentTemplate>>(emptyList())
     val comments = _comments.asStateFlow()
 
     init {
@@ -48,29 +50,17 @@ class BookDetailViewModel(
         _comments.value = commentsUpdated
     }
 
-    fun addBookToWishlist(book: WishlistEntity) {
+    // This function adds a book to the wishlist
+    fun addBookToWishlist(book: WishlistTemplate) {
         viewModelScope.launch {
-            repository.insertWishlist(
-                isbn13 = book.isbn13,
-                title = book.title,
-                subtitle = book.subtitle,
-                price = book.price,
-                image = book.image,
-                url = book.url
-            )
+            repository.insertIntoWishlist(book = book)
         }
     }
 
-    fun addBookToCart(book: CartEntity) {
+    // This function adds a book to the cart
+    fun addBookToCart(book: CartTemplate) {
         viewModelScope.launch {
-            repository.insertCart(
-                isbn13 = book.isbn13,
-                title = book.title,
-                subtitle = book.subtitle,
-                price = book.price,
-                image = book.image,
-                url = book.url
-            )
+            repository.insertIntoCart(book = book)
         }
     }
 

@@ -72,9 +72,9 @@ class BookRepository(
         }
     }
 
+    // This function fetches a book by its ISBN13
     suspend fun fetchBookById(isbn13: String): BookTemplate {
         val book = bookDAO.getBookById(isbn13)
-
         return BookTemplate(
             title = book.title,
             subtitle = book.subtitle,
@@ -85,25 +85,25 @@ class BookRepository(
         )
     }
 
-
-        suspend fun fetchWishlistBooks(): List<WishlistTemplate> {
-            return bookDAO.getBooksFromWishlist().map { entity ->
-                WishlistTemplate(
-                    id = entity.id,
-                    isbn13 = entity.isbn13,
-                    title = entity.title,
-                    subtitle = entity.subtitle,
-                    price = entity.price,
-                    image = entity.image,
-                    url = entity.url
-                )
-            }
+    // This function fetches all books from the wishlist
+    suspend fun fetchWishlistBooks(): List<WishlistTemplate> {
+        return bookDAO.getBooksFromWishlist().map { entity ->
+            WishlistTemplate(
+                id = entity.id,
+                isbn13 = entity.isbn13,
+                title = entity.title,
+                subtitle = entity.subtitle,
+                price = entity.price,
+                image = entity.image,
+                url = entity.url
+            )
         }
+    }
 
-
-    suspend fun getCommentsForBook(isbn13: String): List<CommentEntity> {
+    // This function fetches all comments for a specific book
+    suspend fun getCommentsForBook(isbn13: String): List<CommentTemplate> {
         return bookDAO.getCommentsByIsbn13(isbn13).map {
-            CommentEntity(
+            CommentTemplate(
                 id = it.id,
                 isbn13 = it.isbn13,
                 comment = it.comment
@@ -111,7 +111,7 @@ class BookRepository(
         }
     }
 
-    suspend fun getCommentId (id: String): CommentEntity {
+    suspend fun getCommentById (id: String): CommentEntity {
         return bookDAO.getCommentById(id)
     }
 
@@ -132,6 +132,7 @@ class BookRepository(
         bookDAO.updateComment(comment)
     }
 
+    // This function fetches all books in the cart list
     suspend fun getCartItems(): List<CartTemplate> {
         return bookDAO.getCartItems().map { entity ->
             CartTemplate(
@@ -146,32 +147,36 @@ class BookRepository(
         }
     }
 
-    suspend fun insertWishlist(isbn13: String, title: String, subtitle: String, price: String, image: String, url: String) {
-        bookDAO.insertIntoWishlist(WishlistEntity(
+    // This function inserts a book into the wishlist list
+    suspend fun insertIntoWishlist(book: WishlistTemplate) {
+        bookDAO.insertIntoWishlist(
+            WishlistEntity(
             id = 0,
-            isbn13 = isbn13,
-            title = title,
-            subtitle = subtitle,
-            price = price,
-            image = image,
-            url = url
-        ))
+            isbn13 = book.isbn13,
+            title = book.title,
+            subtitle = book.subtitle,
+            price = book.price,
+            image = book.image,
+            url = book.url
+        )
+        )
     }
 
-    suspend fun insertCart(isbn13: String, title: String, subtitle: String, price: String, image: String, url: String) {
+    // This function inserts a book into the cart list
+    suspend fun insertIntoCart(book: CartTemplate) {
         bookDAO.insertCart(CartEntity(
             id = 0,
-            isbn13 = isbn13,
-            title = title,
-            subtitle = subtitle,
-            price = price,
-            image = image,
-            url = url
+            isbn13 = book.isbn13,
+            title = book.title,
+            subtitle = book.subtitle,
+            price = book.price,
+            image = book.image,
+            url = book.url
         ))
     }
+
     suspend fun getCartById(id: String): CartTemplate {
         val cart = bookDAO.getCartById(id)
-
         return CartTemplate(
             id = cart.id,
             isbn13 = cart.isbn13,

@@ -44,6 +44,7 @@ data class CartEntity(
     val url: String
 )
 
+//The table for comments
 @Entity(
     tableName = "comments",
     foreignKeys = [

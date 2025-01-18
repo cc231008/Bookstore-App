@@ -24,17 +24,25 @@ fun CartScreen(
     onBookClick: (CartTemplate) -> Unit,
     cartViewModel: CartViewModel = viewModel(factory = AppViewModelProvider.cartFactory)
 ) {
+    // Collect a list of books that are present in the cart from the ViewModel
    val cartItems by cartViewModel.cartItems.collectAsStateWithLifecycle()
 
     LazyColumn {
-    items(cartItems) { cartItem ->
-        ShoppingCartCard(
-            book = cartItem,
-            onClick = {
-                onBookClick(cartItem)
+        if (cartItems.isNotEmpty()) {
+            items(cartItems) { cartItem ->
+                ShoppingCartCard(
+                    book = cartItem,
+                    onClick = {
+                        onBookClick(cartItem)
+                    }
+                )
             }
-        )
-    }
+        }
+        else item {
+                Text(
+                    text = "No books found"
+                )
+            }
 
     }
 }
@@ -43,7 +51,6 @@ fun CartScreen(
 fun ShoppingCartCard(
     book: CartTemplate,
     onClick: () -> Unit) {
-    // This is a single card that displays book details
     Card(
         modifier = Modifier
             .fillMaxWidth()
