@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookstore App</title>
@@ -10,7 +11,7 @@
             background-color: #704214;
             color: #F5F5DC;
             font-family: 'Lora', serif;
-            font-size: 18px;
+            font-size: 24px;
             line-height: 1.8;
             margin: 0;
             padding: 0;
@@ -18,74 +19,221 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            text-align: center;
         }
+
+        /* Container Styling */
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             background-color: #2E1F0E;
             border-radius: 12px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
             padding: 20px;
             text-align: center;
         }
+
+        /* Headings Styling */
         h1 {
             font-size: 3em;
+            margin-top: 100px;
             margin-bottom: 20px;
             color: #D4AF37;
             font-weight: 700;
         }
+
         h2, h3 {
             margin-top: 30px;
             font-size: 2em;
             color: #DAA520;
             font-weight: 600;
         }
+
         h4 {
-            font-size: 25px;
-            margin-bottom: 2px;
-            color: #DAA520;
+            font-size: 1.5em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #C3A045;
             font-weight: 600;
         }
+
+        /* List Styling */
         ul {
             list-style-type: none;
             padding: 0;
             font-size: 1.2em;
         }
+
         ul li {
             margin-bottom: 10px;
         }
+
+        /* Paragraph Styling */
         p {
             font-size: 1.1em;
         }
+
+        /* Image Styling */
         img {
             max-width: 100%;
             height: auto;
-            margin: 20px 0;
+            margin: 20px auto;
             border: 3px solid #D7C5A1;
             border-radius: 8px;
+            display: block;
         }
+
+        /* Divider Styling */
         .divider {
-            margin: 30px 0;
+            margin: 30px auto;
             height: 2px;
-            background-color: #D4AF37;
+            background-color: #C3A045;
+            width: 80%;
         }
+
+        /* Box Styling */
+        .box {
+            background-color: #3A2A16;
+            border: 2px solid #D4AF37;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            text-align: left;
+            color: #F5F5DC;
+        }
+
+        .box h4 {
+            color: #DAA520;
+            font-weight: 600;
+        }
+
+        /* Link Styling */
         a {
             color: #F5F5DC;
             text-decoration: none;
             font-weight: bold;
         }
+
         a:hover {
             color: #D4AF37;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #D4AF37; /* Subtle horizontal lines */
+        }
+
+        th:last-child, td:last-child {
+            border-right: none; /* No vertical line for the last column */
+        }
+
+        th {
+            background-color: #3A2A16;
+            color: #D4AF37;
+        }
+
+        td {
+            background-color: #2E1F0E;
+            color: #F5F5DC;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: #3A2A16;
+            padding: 20px 20px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .nav-links {
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            margin: 0 15px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #F5F5DC;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px 15px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #D4AF37;
+        }
+
+        /* Responsive Navbar */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-links li {
+                margin: 10px 0;
+            }
+        }
+        ul.custom-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 auto;
+            display: inline-block;
+            text-align: left;
+        }
+
+        ul.custom-list li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        ul.custom-list li::before {
+            content: "•";
+            font-size: 1.5em;
+            color: #DAA520;
+            margin-right: 10px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
+
+<nav class="navbar">
+    <ul class="nav-links">
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#team-members">Team Members</a></li>
+        <li><a href="#mockups">Mockups</a></li>
+        <li><a href="#user-flow">User Flow</a></li>
+        <li><a href="#usability-test-plan">Usability Test Plan</a></li>
+        <li><a href="#heuristic-evaluation">Heuristic Evaluation</a></li>
+    </ul>
+</nav>
+
 <div class="container">
-    <h1>Bookstore App</h1>
+    <h1 id="introduction">Bookstore App</h1>
     <p>Bookstore is a mobile bookstore app designed to make book discovery and management easy. Users can search for books, create personalized wishlists, and leave comments on their favorite books. The app provides an engaging experience for book enthusiasts, students, and language learners.</p>
 
     <div class="divider"></div>
 
-    <h2>Team Members</h2>
+    <h2 id="team-members">Team Members</h2>
     <ul>
         <li>Alikhan Manat</li>
         <li>Selina Hacker</li>
@@ -93,41 +241,199 @@
 
     <div class="divider"></div>
 
-    <h2>Mockups and User Flow</h2>
+    <h2 id="mockups">Mockups and User Flow</h2>
     <h3>Mockups</h3>
     <p>Below are the wireframes showcasing the app's key screens:</p>
 
     <h4>Welcome Screen</h4>
     <p>Displays an introductory message to welcome users.</p>
-    <img src="https://github.com/user-attachments/assets/5b31c7ef-49e7-4bd3-bebe-d4d8d13e5b9b" alt="Welcome Screen">
+    <img src="images/Welcome.png" alt="Welcome Screen">
 
     <h4>Home Screen</h4>
-    <p>Features a search bar and displays recommended or trending books.</p>
-    <img src="https://github.com/user-attachments/assets/f29da6b9-7fe2-4607-9f74-8e22c45f0ede" alt="Home Screen">
+    <p>Features a search bar and displays books..</p>
+
+    <img src="images/Home.png" alt="Home Screen">
 
     <h4>Book Details Screen</h4>
     <p>Provides details about the book, user reviews, and options to add it to the cart or wishlist.</p>
-    <img src="https://github.com/user-attachments/assets/f2d7bc41-14bd-46f6-9319-f97d40bde01b" alt="Book Details Screen">
+    <img src="images/Book_details.png" alt="Book Details Screen">
+
+    <p>The Book Details Screen features also a comment section, where everyone can leave their thoughts about the book.</p>
+    <img src="images/Comments.png" alt="Book Details Screen">
 
     <h4>Shopping Cart</h4>
     <p>Lists items selected for purchase and allows users to proceed to checkout.</p>
-    <img src="https://github.com/user-attachments/assets/aba5cc33-fecf-4d64-93c1-ffbe80163c7e" alt="Shopping Cart">
+    <img src="images/Shopping Cart.png" alt="Shopping Cart">
 
     <h4>Wishlist Screen</h4>
     <p>Displays books saved by the user for future reference.</p>
-    <img src="https://github.com/user-attachments/assets/a45e035f-223e-4521-af0d-dabf97bbf570" alt="Wishlist Screen">
+    <img src="images/Wishlist.png" alt="Wishlist Screen">
 
     <h4>Checkout Screen</h4>
-    <p>Checkout Screen: Shows a summary of the selected book's details, including price and a purchase button.</p>
-    <img src="https://github.com/user-attachments/assets/cba62378-032f-4a70-9e15-7f561149ad18" alt="Checkout Screen">
+    <p>Shows a summary of the selected book's details, including price and a purchase button.</p>
+    <img src="images/Checkout Screen.png" alt="Checkout Screen">
+
+    <p>After pressing the "Purchase" button, the user gets asked if he really wants to buy the book.</p>
+    <img src="images/Checkout_confirmation_popup.png" alt="Checkout Screen Confirmation">
 
     <h4>Checkout Confirmation</h4>
     <p>Confirms successful completion of the purchase with a success message.</p>
-    <img src="https://github.com/user-attachments/assets/bc9a9e7f-c1b0-4537-9305-7cbe1cc41e9f" alt="Checkout Confirmation">
+    <img src="images/Checkout_confirmation.png" alt="Checkout Confirmation">
 
-    <h3>User Flow</h3>
+    <h2 id="user-flow">User Flow</h2>
     <p>The flow diagram below illustrates how users navigate through the app's screens:</p>
     <img src="https://github.com/user-attachments/assets/acc80b3c-fa76-4e94-9be2-dfedeb445244" alt="User Flow Diagram">
+
+    <div class="divider"></div>
+
+    <h2 id="usability-test-plan">Usability Test Plan</h2>
+    <h3>Test Design</h3>
+    <p>The purpose of the test is to evaluate the usability of the app, focusing on how intuitive and efficient it is for users to search for, purchase, and manage books, as well as to identify areas for improvement based on heuristic evaluations and user feedback.</p>
+
+    <h3>Participants</h3>
+    <h4>Heuristic Evaluation</h4>
+    <p>Conducted by the Bookstore team members familiar with usability principles to identify design flaws early on.</p>
+    <h4>User Testing</h4>
+    <p>Participants will include 5-7 users from the target audience, such as book enthusiasts and students.</p>
+
+    <h3>Environment</h3>
+    <h4>Testing</h4>
+    <p>We use our Figma Prototype for the User Testing.</p>
+    <h4>Tools</h4>
+    <p>Note-taking tools will be used to document observations.</p>
+
+    <h3>Procedure</h3>
+    <h4>Heuristic Evaluation</h4>
+    <p>Evaluators will apply Nielsen’s 10 Usability Heuristics to assess the prototype.</p>
+    <h4>User Testing</h4>
+    <p>Participants will perform assigned tasks while observers record task times, completion rates, and any errors.</p>
+    <h4>Post-Test Feedback</h4>
+    <p>Participants will complete SUS and SEQ questionnaires.</p>
+
+    <h3>Analysis</h3>
+    <p>Task performance metrics, user feedback, and heuristic evaluation results will be combined to identify usability issues and prioritize fixes.</p>
+
+    <h3>Hypotheses and Research Questions</h3>
+    <div class="box">
+        <h4>Hypotheses</h4>
+        <p>Users will find the app intuitive for purchasing books, with an easy process for managing their Wishlist.</p>
+        <h4>Research Questions</h4>
+        <ul>
+            <li>How intuitive and efficient is the process of discovering, purchasing, and managing books in the app?</li>
+            <li>How satisfied are users with the interface for favouriting books and managing their Wishlist?</li>
+        </ul>
+    </div>
+
+    <h3>Data to Collect</h3>
+    <ul class="custom-list">
+        <li>Task Completion Rate</li>
+        <li>Time on Task</li>
+        <li>Error Rate</li>
+        <li>User Feedback (SUS)</li>
+    </ul>
+
+    <h3>Methods</h3>
+    <h4>Heuristic Evaluation</h4>
+    <p>Performed by team members to review app design on usability principles.</p>
+    <h4>User Usability Test</h4>
+    <p>Participants will perform real-world tasks to identify usability gaps.</p>
+
+    <h4>Tasks to Test</h4>
+    <ol>
+        <li>Add a book to the Wishlist.</li>
+        <li>Remove a book from your Wishlist.</li>
+        <li>View details for a book, including its price and comments.</li>
+        <li>Add a book to the cart and proceed to checkout.</li>
+    </ol>
+
+    <div class="divider"></div>
+
+    <h2 id="heuristic-evaluation">Results of Heuristic Evaluation</h2>
+    <p>As mentioned before we used Jakob Nielsen's 10 Usability Heuristics to identify design flaws. Below is a summary of the findings:</p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Heuristic</th>
+            <th>Issue</th>
+            <th>Severity</th>
+            <th>Suggestion</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>1</td>
+            <td>Visibility of system status</td>
+            <td>No feedback after tapping “Add to Shopping Cart” or “Remove from Wishlist”</td>
+            <td>3 (High)</td>
+            <td>Include a popup message confirming the action</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>User Control and Freedom</td>
+            <td>No option to undo “Remove from Wishlist” action</td>
+            <td>3 (High)</td>
+            <td>Provide an “Undo” button after removing an item from the Wishlist</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Error Prevention</td>
+            <td>No confirmation dialog before removing an item from the shopping cart</td>
+            <td>2 (Moderate)</td>
+            <td>Add a confirmation dialog</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Flexibility and efficiency of use</td>
+            <td>No search history or quick filters for frequently used queries</td>
+            <td>2 (Moderate)</td>
+            <td>Include search history or shortcuts to improve user efficiency</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Aesthetic and minimalist design</td>
+            <td>A lot of unused space in the “Bookstore” title bar</td>
+            <td>1 (Low)</td>
+            <td>Reduce unused space in the title bar to enhance aesthetics</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>Help users recognize, diagnose, and recover from errors</td>
+            <td>If the user enters an invalid search query, there is no message to inform them that no results were found</td>
+            <td>3 (High)</td>
+            <td>Add a “No results found” message</td>
+        </tr>
+        </tbody>
+    </table>
+    <p>
+        The heuristic evaluation identified several usability issues, with the most critical ones being the lack of feedback
+        for user actions and limited control over undoing actions. Key improvements include adding confirmation dialogs,
+        better feedback mechanisms, and more efficient navigation features like search history or quick filters.
+    </p>
+    <p>
+        Out of the six issues, three were categorized as high severity, indicating that addressing these will have the
+        most significant impact on user experience. The remaining issues were moderate to low severity and focus more
+        on enhancing aesthetics and preventing minor errors.
+    </p>
+    <p>
+        Overall, the evaluation highlights the app's strengths in design while pointing out specific areas for refinement
+        to achieve a more intuitive and user-friendly interface.
+    </p>
+</div>
+</body>
+<body>
+<nav class="navbar">
+    <ul class="nav-links">
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#team-members">Team Members</a></li>
+        <li><a href="#mockups">Mockups</a></li>
+        <li><a href="#user-flow">User Flow</a></li>
+        <li><a href="#usability-test-plan">Usability Test Plan</a></li>
+        <li><a href="#heuristic-evaluation">Heuristic Evaluation Results</a></li>
+    </ul>
+</nav>
+<div class="container">
 </div>
 </body>
 </html>
