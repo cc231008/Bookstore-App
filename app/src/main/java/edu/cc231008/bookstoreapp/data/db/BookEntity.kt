@@ -34,7 +34,7 @@ data class WishlistEntity(
 //The table for cart
 @Entity(tableName = "cart")
 data class CartEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val isbn13: String,
     val title: String,

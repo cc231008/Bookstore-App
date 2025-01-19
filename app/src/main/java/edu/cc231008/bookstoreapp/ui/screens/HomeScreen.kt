@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,7 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,12 +21,14 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import edu.cc231008.bookstoreapp.data.repo.BookTemplate
 import kotlinx.coroutines.delay
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -106,7 +109,7 @@ fun HomeScreen(
                             }
                         ) {
                             Icon(
-                                imageVector = Icons.Default.ArrowBack,
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Back Button",
                                 tint = if (searchQuery.text.isNotBlank()) Color.Black else Color.Gray // Active/inactive tint
                             )
@@ -133,7 +136,6 @@ fun HomeScreen(
                                 containerColor = Color.Transparent,
                                 focusedIndicatorColor = Color.Transparent,
                                 unfocusedIndicatorColor = Color.Transparent,
-                                cursorColor = Color.Gray // Gray cursor color
                             )
                         )
 
@@ -150,7 +152,7 @@ fun HomeScreen(
                             Icon(
                                 imageVector = Icons.Default.Search,
                                 contentDescription = "Search Icon",
-                                tint = Color.Gray // Gray tint for the search icon
+                                tint = Color.Gray
                             )
                         }
                     }
@@ -185,29 +187,44 @@ fun HomeScreen(
 
 @Composable
 fun BookCard(book: BookTemplate, onClick: () -> Unit) {
-    // Card representing a single book
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp), // Add spacing around the card
-        onClick = onClick, // Handle click events
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp), // Add elevation for shadow
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+        onClick = onClick,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFD7C5A1))
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp) // Inner padding for content
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // Book title
-            Text(
-                text = book.title,
-                style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
+            // Book cover image
+            Image(
+                painter = rememberAsyncImagePainter(model = book.image),
+                contentDescription = "${book.title} Cover",
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(RoundedCornerShape(8.dp))
             )
-            Spacer(modifier = Modifier.height(8.dp)) // Add space between title and price
-            // Book price
-            Text(
-                text = "Price: ${book.price}",
-                style = MaterialTheme.typography.bodyMedium
-            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            // Book title and price
+            Column {
+                Text(
+                    text = book.title,
+                    style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp),
+                    maxLines = 2, // Limits the book title to two lines
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Text(
+                    text = "Price: ${book.price}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         }
     }
 }
