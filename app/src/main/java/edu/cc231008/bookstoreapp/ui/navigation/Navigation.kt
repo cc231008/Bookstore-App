@@ -15,8 +15,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import edu.cc231008.bookstoreapp.data.repo.BookTemplate
 import edu.cc231008.bookstoreapp.ui.screens.*
 
@@ -25,7 +27,6 @@ fun AppNavigation(
     navController: NavHostController,
     books: List<BookTemplate>,
     onSearchResult: (String) -> Unit,
-    onResetClick: () -> Unit
 ) {
     // Tracks the current route in the navigation system
     var currentRoute by remember { mutableStateOf("home") }
@@ -84,14 +85,11 @@ fun AppNavigation(
             composable(route = "home") {
                 AnimatedHomeScreen(
                     books = books, // Pass the list of books
+                    onSearchChange = { query ->
+                        onSearchResult(query)
+                    },
                     onBookClick = { book -> // Handle book clicks
                         navController.navigate(route = "details/${book.isbn13}") // Navigate to details screen
-                    },
-                    onSearchClick = { query -> // Handle search action
-                        onSearchResult(query) // Pass the query to the search handler
-                    },
-                    onResetClick = {
-                        onResetClick() // Reset the search when the reset button is clicked
                     }
                 )
             }
@@ -100,14 +98,29 @@ fun AppNavigation(
                 WishlistScreen(navController = navController)
             }
             // Define the "cart" screen destination
-            composable(route = "cart") {
+            composable("cart") {
                 CartScreen(
-                    onBookClick = { book ->
-                        navController.navigate("checkout/${book.id}")
+                    onBookClick = { cartItem ->
+                        navController.navigate("details/${cartItem.isbn13}")
+                    },
+                    onPurchase = { cartItem ->
+                        navController.navigate("checkout/${cartItem.id}")
                     }
-                ) // Pass the navController for navigation
+                )
             }
-            // Define the "details" screen destination with a dynamic bookId parameter
+            // Define the "checkout" screen destination with cartItemId parameter
+            composable(
+                "checkout/{cartItemId}",
+                arguments = listOf(navArgument("cartItemId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val cartItemId = backStackEntry.arguments?.getInt("cartItemId") ?: 0
+                CheckoutScreen(cartItemId = cartItemId, navController = navController)
+            }
+            // Define the "confirmation" screen destination
+            composable("confirmation") {
+                ConfirmationScreen(navController = navController)
+            }
+            // Define the "details" screen destination with bookId parameter
             composable(route = "details/{bookId}") {
                 BookDetailsScreen(
                     navController = navController,
@@ -116,14 +129,10 @@ fun AppNavigation(
                     }
                 )
             }
-            composable(route = "checkout/{cartId}") {
-                CheckoutScreen() // Pass the navController for navigation
-            }
             composable(route = "editComment/{commentId}") {
                 val commentId = it.arguments?.getString("commentId") ?: ""
                 EditCommentScreen(commentId = commentId, navController = navController)
             }
-
         }
     }
 }

@@ -35,6 +35,14 @@ interface BookDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertIntoWishlist(wishlist: WishlistEntity)
 
+    // Check if a book is in the wishlist by ISBN
+    @Query("SELECT * FROM wishlist WHERE isbn13 = :isbn13 LIMIT 1")
+    suspend fun getWishlistItemByIsbn13(isbn13: String): WishlistEntity?
+
+    // Delete a book from the wishlist by ISBN
+    @Query("DELETE FROM wishlist WHERE isbn13 = :isbn13")
+    suspend fun deleteWishlistByIsbn13(isbn13: String)
+
     //This function gets the list of comments for a specific book by its isbn13 (which is book's ID)
     @Query("SELECT * FROM comments WHERE isbn13 = :isbn13")
     suspend fun getCommentsByIsbn13(isbn13: String): List<CommentEntity>
@@ -59,13 +67,14 @@ interface BookDAO {
     @Query("SELECT * FROM cart")
     suspend fun getCartItems(): List<CartEntity>
 
-    //This function gets a cart item by its id. It is used to fetch data of a specific cart item for the checkout process.
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCart(cart: CartEntity)
+
     @Query("SELECT * FROM cart WHERE id = :id")
     suspend fun getCartById(id: String): CartEntity
 
-    //This function inserts a book into the cart list
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCart(cart: CartEntity)
+    @Query("DELETE FROM cart WHERE id = :cartItemId")
+    suspend fun deleteCartItemById(cartItemId: Int)
 }
 
 /*

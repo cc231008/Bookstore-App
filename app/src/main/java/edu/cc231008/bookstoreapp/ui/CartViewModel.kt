@@ -8,14 +8,40 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class CartViewModel(private val bookRepository: BookRepository): ViewModel() {
+class CartViewModel(
+    private val bookRepository: BookRepository
+) : ViewModel() {
+
     private val _cartItems = MutableStateFlow<List<CartTemplate>>(emptyList())
     val cartItems: StateFlow<List<CartTemplate>> = _cartItems
 
     init {
+        loadCartItems()
+    }
+
+    // Load cart items from the repository
+    private fun loadCartItems() {
         viewModelScope.launch {
-            val cartItems = bookRepository.getCartItems()
-            _cartItems.value = cartItems
+            _cartItems.value = bookRepository.getCartItems()
+        }
+    }
+
+    fun addToCart(isbn13: String, title: String, subtitle: String, price: String, image: String, url: String) {
+        viewModelScope.launch {
+            bookRepository.insertCart(isbn13, title, subtitle, price, image, url)
+            _cartItems.value = bookRepository.getCartItems()
+        }
+    }
+    // Remove an item from the cart
+    fun removeFromCart(cartItemId: Int) {
+        viewModelScope.launch {
+            bookRepository.removeCartItemById(cartItemId)
+            _cartItems.value = bookRepository.getCartItems()
+        }
+    }
+    fun purchaseItem(cartItemId: Int) {
+        viewModelScope.launch {
+            removeFromCart(cartItemId)
         }
     }
 }

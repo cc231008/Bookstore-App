@@ -101,6 +101,15 @@ class BookRepository(
         }
 
 
+    // Delete a book from the wishlist
+    suspend fun deleteWishlist(isbn13: String) {
+        bookDAO.deleteWishlistByIsbn13(isbn13)
+    }
+
+    suspend fun getWishlistItemByIsbn13(isbn13: String): WishlistEntity? {
+        return bookDAO.getWishlistItemByIsbn13(isbn13)
+    }
+
     suspend fun getCommentsForBook(isbn13: String): List<CommentEntity> {
         return bookDAO.getCommentsByIsbn13(isbn13).map {
             CommentEntity(
@@ -181,5 +190,8 @@ class BookRepository(
             image = cart.image,
             url = cart.url
         )
+    }
+    suspend fun removeCartItemById(cartItemId: Int) {
+        bookDAO.deleteCartItemById(cartItemId)
     }
 }

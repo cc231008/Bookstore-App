@@ -1,11 +1,17 @@
 package edu.cc231008.bookstoreapp.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,11 +20,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import edu.cc231008.bookstoreapp.R
 import edu.cc231008.bookstoreapp.data.db.CartEntity
 import edu.cc231008.bookstoreapp.data.db.CommentEntity
@@ -38,15 +46,24 @@ fun BookDetailsScreen(
     val comments by bookDetailViewModel.comments.collectAsStateWithLifecycle()
     var commentText by remember { mutableStateOf("") }
 
-    // Variables to track the state of the buttons
-    var wishlistButtonClicked by remember { mutableStateOf(false) }
-    var cartButtonClicked by remember { mutableStateOf(false) }
+    // Load the wishlist status from ViewModel
+    var isWishlist by remember { mutableStateOf(false) }
 
-    // Add the visual structure and layout for the screen
+    var isAddedToCart by remember { mutableStateOf(false) }
+
+    // On screen load, check if the book is in the wishlist
+    LaunchedEffect(book.isbn13) {
+        isWishlist = bookDetailViewModel.isInWishlist(book.isbn13)
+    }
+
+    // Scrollable column
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5DC)) // Background for the entire screen
+            .background(Color(0xFFF5F5DC))
+            .verticalScroll(scrollState)
     ) {
         // Header with title
         Box(
@@ -54,61 +71,33 @@ fun BookDetailsScreen(
                 .fillMaxWidth()
                 .height(80.dp)
                 .background(Color(0xFF704214)),
-            contentAlignment = Alignment.Center
         ) {
+            // Title in the center
             Text(
                 text = "Bookstore",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
-                )
+                ),
+                modifier = Modifier.align(Alignment.Center)
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Centered book title
-        Text(
-            text = book.title,
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            ),
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Price: ${book.price}",
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.align(Alignment.CenterHorizontally) // Centers the text
-        )
-
-        Spacer(modifier = Modifier.height(30.dp))
-
-        // Buttons for Wishlist and Shopping Cart
-        Column(
+        // Container for the book cover and heart icon
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(horizontal = 16.dp)
         ) {
-            // Wishlist Button
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .background(
-                        color = if (wishlistButtonClicked) Color(0xFFB87333) else Color(0xFFF4E6C1),
-                        shape = RoundedCornerShape(15.dp)
-                    )
-                    .border(
-                        width = 1.dp,
-                        color = Color.Black,
-                        shape = RoundedCornerShape(15.dp)
-                    )
-                    .clickable { // Click action
+            // Heart icon aligned to the top-left corner
+            IconButton(
+                onClick = {
+                    if (isWishlist) {
+                        bookDetailViewModel.removeFromWishlist(book.isbn13)
+                    } else {
                         bookDetailViewModel.addBookToWishlist(
                             WishlistEntity(
                                 isbn13 = book.isbn13,
@@ -119,29 +108,72 @@ fun BookDetailsScreen(
                                 url = book.url
                             )
                         )
-                        wishlistButtonClicked = true // Update state
-                    },
-                contentAlignment = Alignment.Center // Centers the text inside the button
+                    }
+                    isWishlist = !isWishlist // Update the UI state
+                },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(start = 8.dp)
             ) {
-                Text(
-                    text = if (wishlistButtonClicked) "The book was added to the wishlist" else "Add to Wishlist",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black // Text color
-                    )
+                Icon(
+                    imageVector = if (isWishlist) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                    contentDescription = if (isWishlist) "Remove from Wishlist" else "Add to Wishlist",
+                    tint = if (isWishlist) Color(0xFF8B0000) else Color.Gray,
+                    modifier = Modifier.size(35.dp)
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            // Book cover image
+            Image(
+                painter = rememberAsyncImagePainter(book.image),
+                contentDescription = "Book Cover: ${book.title}",
+                modifier = Modifier
+                    .size(400.dp)
+                    .align(Alignment.Center)
+            )
+        }
 
-            // Add to Cart Button
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Book title
+        Text(
+            text = book.title,
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = "Price: ${book.price}",
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.Black
+            ),
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+
+        Spacer(modifier = Modifier.height(35.dp))
+
+        // Add to Cart Button
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp),
+            contentAlignment = Alignment.Center
+        ) {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.5f)
                     .height(48.dp)
                     .background(
-                        color = if (cartButtonClicked) Color(0xFFB87333) else Color(0xFFF4E6C1),
+                        color = if (isAddedToCart) Color(0xFFB87333) else Color(0xFFF4E6C1),
                         shape = RoundedCornerShape(15.dp)
                     )
                     .border(
@@ -149,23 +181,25 @@ fun BookDetailsScreen(
                         color = Color.Black,
                         shape = RoundedCornerShape(15.dp)
                     )
-                    .clickable { // Click action
-                        bookDetailViewModel.addBookToCart(
-                            CartEntity(
-                                isbn13 = book.isbn13,
-                                title = book.title,
-                                subtitle = book.subtitle,
-                                price = book.price,
-                                image = book.image,
-                                url = book.url
+                    .clickable {
+                        if (!isAddedToCart) { // Prevent re-adding if already added
+                            bookDetailViewModel.addBookToCart(
+                                CartEntity(
+                                    isbn13 = book.isbn13,
+                                    title = book.title,
+                                    subtitle = book.subtitle,
+                                    price = book.price,
+                                    image = book.image,
+                                    url = book.url
+                                )
                             )
-                        )
-                        cartButtonClicked = true // Update state
+                            isAddedToCart = true // Update state
+                        }
                     },
-                contentAlignment = Alignment.Center // Centers the text inside the button
+                contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = if (cartButtonClicked) "The book was added to the cart" else "Add to Cart",
+                    text = if (isAddedToCart) "Added to Cart" else "Add to Cart",
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
@@ -195,11 +229,10 @@ fun BookDetailsScreen(
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // White background text field
             Box(
                 modifier = Modifier
-                    .weight(1f) // Makes the TextField expand to fill the available space
-                    .height(56.dp) // Increased height for the input field
+                    .weight(1f)
+                    .height(56.dp)
                     .background(
                         color = Color.White,
                         shape = RoundedCornerShape(8.dp)
@@ -230,32 +263,31 @@ fun BookDetailsScreen(
                                 )
                             )
                         }
-                        innerTextField() // Displays the actual text input
+                        innerTextField()
                     }
                 )
             }
 
-            Spacer(modifier = Modifier.width(8.dp)) // Space between the input field and the button
+            Spacer(modifier = Modifier.width(8.dp))
 
-            // Send icon button
             IconButton(
                 onClick = {
                     if (commentText.isNotBlank()) {
                         bookDetailViewModel.addComment(commentText)
-                        commentText = "" // Clear the input field after sending
+                        commentText = ""
                     }
                 },
                 modifier = Modifier
                     .size(48.dp)
                     .background(
-                        color = Color(0xFF704214), // Brown background for the icon button
-                        shape = RoundedCornerShape(24.dp) // Circular button
+                        color = Color(0xFF704214),
+                        shape = RoundedCornerShape(24.dp)
                     )
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.baseline_send_24), // Replace with your send icon resource
+                    painter = painterResource(id = R.drawable.baseline_send_24),
                     contentDescription = "Send",
-                    tint = Color.White // White icon color
+                    tint = Color.White
                 )
             }
         }
