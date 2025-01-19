@@ -24,8 +24,5 @@ fun BookUi(
         onSearchResult = { query ->
             bookViewModel.searchBooks(query)
         },
-        onResetClick = {
-            bookViewModel.resetSearch()
-        }
     )
 }
