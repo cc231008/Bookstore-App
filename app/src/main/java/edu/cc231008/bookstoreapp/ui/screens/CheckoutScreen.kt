@@ -65,7 +65,7 @@ fun CheckoutScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "${cartItem.price}",
+                            text = cartItem.price,
                             style = MaterialTheme.typography.bodyLarge.copy(
                                 fontSize = 25.sp,
                                 fontWeight = FontWeight.Bold,

@@ -28,7 +28,7 @@ fun ConfirmationScreen(
             .background(Color(0xFFF5F5DC))
             .clickable {
                 navController.navigate("home") {
-                    popUpTo("home") { inclusive = true } // back to Homescreen and remove books from the backstack
+                    popUpTo("home") { inclusive = true } // back to HomeScreen and remove books from the backstack
                 }
             },
         contentAlignment = Alignment.Center

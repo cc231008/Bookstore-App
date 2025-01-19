@@ -15,8 +15,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import edu.cc231008.bookstoreapp.data.repo.BookTemplate
 import edu.cc231008.bookstoreapp.ui.screens.*
 
@@ -93,11 +95,7 @@ fun AppNavigation(
             }
             // Define the "wishlist" screen destination
             composable(route = "wishlist") {
-                WishlistScreen(
-                    onBookClick = { book ->
-                        navController.navigate("details/${book.isbn13}")
-                    }
-                )
+                WishlistScreen()
             }
             // Define the "cart" screen destination
             composable("cart") {
