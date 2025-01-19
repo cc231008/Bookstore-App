@@ -1,36 +1,30 @@
 package edu.cc231008.bookstoreapp.ui.screens
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
-import edu.cc231008.bookstoreapp.R
 import edu.cc231008.bookstoreapp.data.db.CartEntity
 import edu.cc231008.bookstoreapp.data.db.CommentEntity
 import edu.cc231008.bookstoreapp.data.db.WishlistEntity
+import edu.cc231008.bookstoreapp.data.repo.WishlistTemplate
 import edu.cc231008.bookstoreapp.ui.AppViewModelProvider
 import edu.cc231008.bookstoreapp.ui.BookDetailViewModel
 
@@ -41,11 +35,22 @@ fun BookDetailsScreen(
     navController: NavHostController,
     bookDetailViewModel: BookDetailViewModel = viewModel(factory = AppViewModelProvider.DetailFactory),
 ) {
+    // Collect a current state of a book from the ViewModel
     val state by bookDetailViewModel.bookDetailUiState.collectAsStateWithLifecycle()
     val book = state.book
-    val comments by bookDetailViewModel.comments.collectAsStateWithLifecycle()
-    var commentText by remember { mutableStateOf("") }
 
+    // Collect a list of comments from the ViewModel
+    val comments by bookDetailViewModel.comments.collectAsStateWithLifecycle()
+    var commentText by rememberSaveable { mutableStateOf("") }
+
+    // This part of the code responsible for updating list of comments when the comment is edited.
+    val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
+    val commentEdited = savedStateHandle?.get<Boolean>("commentEdited") ?: false
+    LaunchedEffect(commentEdited) {
+        if (commentEdited) {
+            bookDetailViewModel.updateComments()
+            savedStateHandle?.set("commentEdited", false)
+        }
     // Load the wishlist status from ViewModel
     var isWishlist by remember { mutableStateOf(false) }
 
@@ -99,7 +104,7 @@ fun BookDetailsScreen(
                         bookDetailViewModel.removeFromWishlist(book.isbn13)
                     } else {
                         bookDetailViewModel.addBookToWishlist(
-                            WishlistEntity(
+                            WishlistTemplate(
                                 isbn13 = book.isbn13,
                                 title = book.title,
                                 subtitle = book.subtitle,
@@ -184,7 +189,7 @@ fun BookDetailsScreen(
                     .clickable {
                         if (!isAddedToCart) { // Prevent re-adding if already added
                             bookDetailViewModel.addBookToCart(
-                                CartEntity(
+                                CartTemplate(
                                     isbn13 = book.isbn13,
                                     title = book.title,
                                     subtitle = book.subtitle,

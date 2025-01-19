@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,9 +24,11 @@ fun EditCommentScreen(
     editCommentViewModel: EditCommentViewModel = viewModel(factory = AppViewModelProvider.editCommentFactory),
 ) {
 
+    // Collect the current comment from the ViewModel
     val comment by editCommentViewModel.comment.collectAsStateWithLifecycle()
-    var commentText by remember {mutableStateOf("")}
+    var commentText by rememberSaveable {mutableStateOf("")}
 
+    // If the comment changes, LaunchedEffect ensures that commentText is updated to reflect the new value.
     LaunchedEffect(comment) {
         commentText = comment?.comment ?: ""
     }
@@ -45,6 +47,7 @@ fun EditCommentScreen(
                         comment = commentText
                     )
                 )
+                // Notify the previous screen that the comment has been edited
                 navController.previousBackStackEntry?.savedStateHandle?.set("commentEdited", true)
                 navController.popBackStack()
             }
