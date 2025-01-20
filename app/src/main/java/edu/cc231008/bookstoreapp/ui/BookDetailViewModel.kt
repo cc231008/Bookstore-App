@@ -3,9 +3,7 @@ package edu.cc231008.bookstoreapp.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import edu.cc231008.bookstoreapp.data.db.CartEntity
 import edu.cc231008.bookstoreapp.data.db.CommentEntity
-import edu.cc231008.bookstoreapp.data.db.WishlistEntity
 import edu.cc231008.bookstoreapp.data.repo.BookRepository
 import edu.cc231008.bookstoreapp.data.repo.BookTemplate
 import edu.cc231008.bookstoreapp.data.repo.CartTemplate
@@ -87,7 +85,7 @@ class BookDetailViewModel(
             viewModelScope.launch {
                 repository.addComment(
                     isbn13 = bookId,
-                    comment = comment
+                    comment = comment,
                 )
                 updateComments()
             }

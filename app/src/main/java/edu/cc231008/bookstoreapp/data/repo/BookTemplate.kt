@@ -35,5 +35,6 @@ data class CartTemplate(
 data class CommentTemplate(
     val id: Int,
     val isbn13: String,
-    val comment: String
+    val comment: String,
+    val createdAt: Long
 )

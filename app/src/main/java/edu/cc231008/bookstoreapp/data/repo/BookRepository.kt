@@ -106,7 +106,8 @@ class BookRepository(
             CommentTemplate(
                 id = entity.id,
                 isbn13 = entity.isbn13,
-                comment = entity.comment
+                comment = entity.comment,
+                createdAt = entity.createdAt
             )
 
         }
@@ -129,7 +130,8 @@ class BookRepository(
             bookDAO.insertComment(
                 CommentEntity(
                     isbn13 = isbn13,
-                    comment = comment
+                    comment = comment,
+                    createdAt = System.currentTimeMillis()
                 )
             )
         }

@@ -60,5 +60,6 @@ data class CommentEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val isbn13: String,
-    val comment: String
+    val comment: String,
+    val createdAt: Long, //Shows time when a comment is created.
 )

@@ -44,7 +44,8 @@ fun EditCommentScreen(
                     CommentEntity(
                         id = commentId.toInt(),
                         isbn13 = comment!!.isbn13,
-                        comment = commentText
+                        comment = commentText,
+                        createdAt = comment!!.createdAt
                     )
                 )
                 // Notify the previous screen that the comment has been edited

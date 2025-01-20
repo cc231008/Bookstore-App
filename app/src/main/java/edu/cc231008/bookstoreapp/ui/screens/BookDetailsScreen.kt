@@ -25,7 +25,6 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -52,14 +51,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import edu.cc231008.bookstoreapp.R
-import edu.cc231008.bookstoreapp.data.db.CartEntity
 import edu.cc231008.bookstoreapp.data.db.CommentEntity
 import edu.cc231008.bookstoreapp.data.repo.CartTemplate
 import edu.cc231008.bookstoreapp.data.repo.WishlistTemplate
 import edu.cc231008.bookstoreapp.ui.AppViewModelProvider
 import edu.cc231008.bookstoreapp.ui.BookDetailViewModel
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookDetailsScreen(
     onEditComment: (CommentEntity) -> Unit,
@@ -335,6 +335,7 @@ fun BookDetailsScreen(
 
             // Display comments
             comments.forEach { comment ->
+                val createdComment = formatTimestamp(comment.createdAt)
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -343,6 +344,11 @@ fun BookDetailsScreen(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = "Added at: $createdComment",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.Gray
+                        )
                         Text(text = comment.comment, style = MaterialTheme.typography.bodyMedium)
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -354,7 +360,8 @@ fun BookDetailsScreen(
                                         CommentEntity(
                                             id = comment.id,
                                             isbn13 = comment.isbn13,
-                                            comment = commentText
+                                            comment = commentText,
+                                            createdAt = comment.createdAt
                                         )
                                     )
                                 },
@@ -372,7 +379,8 @@ fun BookDetailsScreen(
                                         CommentEntity(
                                             id = comment.id,
                                             isbn13 = comment.isbn13,
-                                            comment = commentText
+                                            comment = commentText,
+                                            createdAt = comment.createdAt
                                         )
                                     )
                                 },
@@ -385,4 +393,15 @@ fun BookDetailsScreen(
                 }
             }
         }
+}
+
+//As time of comment's creation is originally received in milliseconds, formatTimestamp helps to format milliseconds into date.
+fun formatTimestamp(timestamp: Long): String {
+    //If timestamp is 1672531199000, instant would represent 2023-01-01T00:00:00Z.
+    val instant = Instant.ofEpochMilli(timestamp)
+    //Uses pattern to display in certain way
+    val formatter = DateTimeFormatter.ofPattern("d MMM yyyy HH:mm")
+        .withZone(ZoneId.systemDefault())
+
+    return formatter.format(instant)
 }
