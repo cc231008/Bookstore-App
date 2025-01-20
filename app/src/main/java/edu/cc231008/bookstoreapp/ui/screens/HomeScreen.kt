@@ -5,8 +5,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,9 +31,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import edu.cc231008.bookstoreapp.data.repo.BookTemplate
 import kotlinx.coroutines.delay
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -250,7 +250,7 @@ fun AnimatedHomeScreen(
     // State to control the visibility of the HomeScreen
     var showHomeScreen by remember { mutableStateOf(false) }
 
-    // Add delay for a smooth animation effect
+    // Delays the visibility to create a smooth transition
     LaunchedEffect(Unit) {
         delay(300)
         showHomeScreen = true

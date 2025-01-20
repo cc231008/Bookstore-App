@@ -72,78 +72,23 @@ class BookRepository(
         }
     }
 
+    // This function fetches a book by its ISBN13
     suspend fun fetchBookById(isbn13: String): BookTemplate {
         val book = bookDAO.getBookById(isbn13)
-
         return BookTemplate(
             title = book.title,
             subtitle = book.subtitle,
             isbn13 = book.isbn13,
-            price = book.price ,
-            image = book.image ,
+            price = book.price,
+            image = book.image,
             url = book.url
         )
     }
 
-
-        suspend fun fetchWishlistBooks(): List<WishlistTemplate> {
-            return bookDAO.getBooksFromWishlist().map { entity ->
-                WishlistTemplate(
-                    id = entity.id,
-                    isbn13 = entity.isbn13,
-                    title = entity.title,
-                    subtitle = entity.subtitle,
-                    price = entity.price,
-                    image = entity.image,
-                    url = entity.url
-                )
-            }
-        }
-
-
-    // Delete a book from the wishlist
-    suspend fun deleteWishlist(isbn13: String) {
-        bookDAO.deleteWishlistByIsbn13(isbn13)
-    }
-
-    suspend fun getWishlistItemByIsbn13(isbn13: String): WishlistEntity? {
-        return bookDAO.getWishlistItemByIsbn13(isbn13)
-    }
-
-    suspend fun getCommentsForBook(isbn13: String): List<CommentEntity> {
-        return bookDAO.getCommentsByIsbn13(isbn13).map {
-            CommentEntity(
-                id = it.id,
-                isbn13 = it.isbn13,
-                comment = it.comment
-            )
-        }
-    }
-
-    suspend fun getCommentId (id: String): CommentEntity {
-        return bookDAO.getCommentById(id)
-    }
-
-    suspend fun addComment(isbn13: String, comment: String) {
-        bookDAO.insertComment(
-            CommentEntity(
-                isbn13 = isbn13,
-                comment = comment
-            )
-        )
-    }
-
-    suspend fun deleteComment(comment: CommentEntity) {
-        bookDAO.deleteComment(comment)
-    }
-
-    suspend fun editComment(comment: CommentEntity) {
-        bookDAO.updateComment(comment)
-    }
-
-    suspend fun getCartItems(): List<CartTemplate> {
-        return bookDAO.getCartItems().map { entity ->
-            CartTemplate(
+    // This function fetches all books from the wishlist
+    suspend fun fetchWishlistBooks(): List<WishlistTemplate> {
+        return bookDAO.getBooksFromWishlist().map { entity ->
+            WishlistTemplate(
                 id = entity.id,
                 isbn13 = entity.isbn13,
                 title = entity.title,
@@ -155,43 +100,107 @@ class BookRepository(
         }
     }
 
-    suspend fun insertWishlist(isbn13: String, title: String, subtitle: String, price: String, image: String, url: String) {
-        bookDAO.insertIntoWishlist(WishlistEntity(
-            id = 0,
-            isbn13 = isbn13,
-            title = title,
-            subtitle = subtitle,
-            price = price,
-            image = image,
-            url = url
-        ))
+    // This function fetches all comments for a specific book
+    suspend fun getCommentsForBook(isbn13: String): List<CommentTemplate> {
+        return bookDAO.getCommentsByIsbn13(isbn13).map { entity ->
+            CommentTemplate(
+                id = entity.id,
+                isbn13 = entity.isbn13,
+                comment = entity.comment
+            )
+
+        }
     }
 
-    suspend fun insertCart(isbn13: String, title: String, subtitle: String, price: String, image: String, url: String) {
-        bookDAO.insertCart(CartEntity(
-            id = 0,
-            isbn13 = isbn13,
-            title = title,
-            subtitle = subtitle,
-            price = price,
-            image = image,
-            url = url
-        ))
-    }
-    suspend fun getCartById(id: String): CartTemplate {
-        val cart = bookDAO.getCartById(id)
+        // Delete a book from the wishlist
+        suspend fun deleteWishlist(isbn13: String) {
+            bookDAO.deleteWishlistByIsbn13(isbn13)
+        }
 
-        return CartTemplate(
-            id = cart.id,
-            isbn13 = cart.isbn13,
-            title = cart.title,
-            subtitle = cart.subtitle,
-            price = cart.price,
-            image = cart.image,
-            url = cart.url
-        )
+        suspend fun getWishlistItemByIsbn13(isbn13: String): WishlistEntity? {
+            return bookDAO.getWishlistItemByIsbn13(isbn13)
+        }
+
+        suspend fun getCommentById(id: String): CommentEntity {
+            return bookDAO.getCommentById(id)
+        }
+
+        suspend fun addComment(isbn13: String, comment: String) {
+            bookDAO.insertComment(
+                CommentEntity(
+                    isbn13 = isbn13,
+                    comment = comment
+                )
+            )
+        }
+
+        suspend fun deleteComment(comment: CommentEntity) {
+            bookDAO.deleteComment(comment)
+        }
+
+        suspend fun editComment(comment: CommentEntity) {
+            bookDAO.updateComment(comment)
+        }
+
+        // This function fetches all books in the cart list
+        suspend fun getCartItems(): List<CartTemplate> {
+            return bookDAO.getCartItems().map { entity ->
+                CartTemplate(
+                    id = entity.id,
+                    isbn13 = entity.isbn13,
+                    title = entity.title,
+                    subtitle = entity.subtitle,
+                    price = entity.price,
+                    image = entity.image,
+                    url = entity.url
+                )
+            }
+        }
+
+        // This function inserts a book into the wishlist list
+        suspend fun insertIntoWishlist(book: WishlistTemplate) {
+            bookDAO.insertIntoWishlist(
+                WishlistEntity(
+                    id = 0,
+                    isbn13 = book.isbn13,
+                    title = book.title,
+                    subtitle = book.subtitle,
+                    price = book.price,
+                    image = book.image,
+                    url = book.url
+                )
+            )
+        }
+
+        // This function inserts a book into the cart list
+        suspend fun insertIntoCart(book: CartTemplate) {
+            bookDAO.insertCart(
+                CartEntity(
+                    id = 0,
+                    isbn13 = book.isbn13,
+                    title = book.title,
+                    subtitle = book.subtitle,
+                    price = book.price,
+                    image = book.image,
+                    url = book.url
+                )
+            )
+        }
+
+        suspend fun getCartById(id: String): CartTemplate {
+            val cart = bookDAO.getCartById(id)
+            return CartTemplate(
+                id = cart.id,
+                isbn13 = cart.isbn13,
+                title = cart.title,
+                subtitle = cart.subtitle,
+                price = cart.price,
+                image = cart.image,
+                url = cart.url
+            )
+        }
+
+        suspend fun removeCartItemById(cartItemId: Int) {
+            bookDAO.deleteCartItemById(cartItemId)
+        }
     }
-    suspend fun removeCartItemById(cartItemId: Int) {
-        bookDAO.deleteCartItemById(cartItemId)
-    }
-}

@@ -31,10 +31,9 @@ data class CartTemplate(
     val url: String
 )
 
-/*
+
 data class CommentTemplate(
     val id: Int,
     val isbn13: String,
     val comment: String
 )
- */

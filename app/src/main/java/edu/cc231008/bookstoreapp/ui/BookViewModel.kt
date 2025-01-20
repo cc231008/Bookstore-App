@@ -32,13 +32,5 @@ class BookViewModel(private val repository: BookRepository) : ViewModel() {
         }
         }
 
-    fun resetSearch() {
-        viewModelScope.launch {
-            // Reset the search by loading all books from the repository
-            repository.books.collect { books ->
-                _bookUiState.value = books
-            }
-        }
-    }
 }
 

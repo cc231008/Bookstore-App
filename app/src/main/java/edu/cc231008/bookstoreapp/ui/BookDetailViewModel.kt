@@ -8,6 +8,9 @@ import edu.cc231008.bookstoreapp.data.db.CommentEntity
 import edu.cc231008.bookstoreapp.data.db.WishlistEntity
 import edu.cc231008.bookstoreapp.data.repo.BookRepository
 import edu.cc231008.bookstoreapp.data.repo.BookTemplate
+import edu.cc231008.bookstoreapp.data.repo.CartTemplate
+import edu.cc231008.bookstoreapp.data.repo.CommentTemplate
+import edu.cc231008.bookstoreapp.data.repo.WishlistTemplate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -35,7 +38,8 @@ class BookDetailViewModel(
         )
     )
     val bookDetailUiState = _bookDetailUiState.asStateFlow()
-    private val _comments = MutableStateFlow<List<CommentEntity>>(emptyList())
+
+    private val _comments = MutableStateFlow<List<CommentTemplate>>(emptyList())
     val comments = _comments.asStateFlow()
 
     init {
@@ -52,17 +56,17 @@ class BookDetailViewModel(
         _comments.value = commentsUpdated
     }
 
-    // Add book to wishlist
-    fun addBookToWishlist(book: WishlistEntity) {
+    // This function adds a book to the wishlist
+    fun addBookToWishlist(book: WishlistTemplate) {
         viewModelScope.launch {
-            repository.insertWishlist(
-                isbn13 = book.isbn13,
-                title = book.title,
-                subtitle = book.subtitle,
-                price = book.price,
-                image = book.image,
-                url = book.url
-            )
+            repository.insertIntoWishlist(book = book)
+        }
+    }
+
+    // This function adds a book to the cart
+    fun addBookToCart(book: CartTemplate) {
+        viewModelScope.launch {
+            repository.insertIntoCart(book = book)
         }
     }
 
@@ -73,41 +77,27 @@ class BookDetailViewModel(
         }
     }
 
-    // Check if book is in wishlist
-    suspend fun isInWishlist(isbn13: String): Boolean {
-        return repository.getWishlistItemByIsbn13(isbn13) != null
-    }
+        // Check if book is in wishlist
+        suspend fun isInWishlist(isbn13: String): Boolean {
+            return repository.getWishlistItemByIsbn13(isbn13) != null
+        }
 
-    // Add a comment to the current book
-    fun addComment(comment: String) {
-        viewModelScope.launch {
-            repository.addComment(
-                isbn13 = bookId,
-                comment = comment
-            )
-            updateComments()
+        // Add a comment to the current book
+        fun addComment(comment: String) {
+            viewModelScope.launch {
+                repository.addComment(
+                    isbn13 = bookId,
+                    comment = comment
+                )
+                updateComments()
+            }
+        }
+
+        // Delete a comment for the current book
+        fun deleteComment(comment: CommentEntity) {
+            viewModelScope.launch {
+                repository.deleteComment(comment)
+                updateComments()
+            }
         }
     }
-
-    // Delete a comment for the current book
-    fun deleteComment(comment: CommentEntity) {
-        viewModelScope.launch {
-            repository.deleteComment(comment)
-            updateComments()
-        }
-    }
-
-    // Add book to cart
-    fun addBookToCart(book: CartEntity) {
-        viewModelScope.launch {
-            repository.insertCart(
-                isbn13 = book.isbn13,
-                title = book.title,
-                subtitle = book.subtitle,
-                price = book.price,
-                image = book.image,
-                url = book.url
-            )
-        }
-    }
-}

@@ -26,9 +26,9 @@ class CartViewModel(
         }
     }
 
-    fun addToCart(isbn13: String, title: String, subtitle: String, price: String, image: String, url: String) {
+    fun addToCart(book: CartTemplate) {
         viewModelScope.launch {
-            bookRepository.insertCart(isbn13, title, subtitle, price, image, url)
+            bookRepository.insertIntoCart(book)
             _cartItems.value = bookRepository.getCartItems()
         }
     }
