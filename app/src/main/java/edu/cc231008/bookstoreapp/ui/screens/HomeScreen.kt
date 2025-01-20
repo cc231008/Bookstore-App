@@ -24,8 +24,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
@@ -41,7 +43,7 @@ fun HomeScreen(
     onBookClick: (BookTemplate) -> Unit // Callback when a book is clicked
 ) {
     val systemUiController = rememberSystemUiController()
-    val statusBarColor = Color(0xFF704214)
+    val statusBarColor = Color(0xFF745447)
     val pageBackgroundColor = Color(0xFFF5F5DC)
 
     // Change the system status bar color
@@ -187,7 +189,6 @@ fun HomeScreen(
 
 @Composable
 fun BookCard(book: BookTemplate, onClick: () -> Unit) {
-    // A card displaying details of a single book
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -199,36 +200,46 @@ fun BookCard(book: BookTemplate, onClick: () -> Unit) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(vertical = 8.dp, horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Book cover image
+            // Book Cover Image
             Image(
                 painter = rememberAsyncImagePainter(model = book.image),
                 contentDescription = "${book.title} Cover",
                 modifier = Modifier
-                    .size(120.dp)
+                    .width(160.dp)
+                    .height(200.dp)
                     .clip(RoundedCornerShape(8.dp))
+                    .padding(end = 8.dp)
             )
 
-            Spacer(modifier = Modifier.width(16.dp))
-
-            // Book title and price
+            // Title and Price
             Column {
                 Text(
                     text = book.title,
-                    style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp),
-                    maxLines = 2, // Limits the book title to two lines
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 25.dp)
                 )
                 Text(
                     text = "Price: ${book.price}",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                 )
             }
         }
     }
 }
+
 
 @Composable
 fun AnimatedHomeScreen(

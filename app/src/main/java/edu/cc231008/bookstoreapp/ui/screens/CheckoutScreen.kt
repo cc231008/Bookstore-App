@@ -92,7 +92,7 @@ fun CheckoutScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(80.dp)
-                        .background(Color(0xFF704214)),
+                        .background(Color(0xFF745447)),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(

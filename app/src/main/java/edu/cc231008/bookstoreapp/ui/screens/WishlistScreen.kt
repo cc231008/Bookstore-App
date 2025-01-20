@@ -2,6 +2,7 @@ package edu.cc231008.bookstoreapp.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -44,7 +46,7 @@ fun WishlistScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(110.dp)
-                    .background(Color(0xFF704214))
+                    .background(Color(0xFF745447))
             ) {
                 Column(
                     modifier = Modifier
@@ -110,6 +112,9 @@ fun WishlistScreen(
                                     image = book.image,
                                     url = book.url
                                 )
+                            },
+                            onBookClick = {
+                                navController.navigate("details/${book.isbn13}") // Navigation zur BookDetailsScreen
                             }
                         )
                     }
@@ -119,16 +124,19 @@ fun WishlistScreen(
     )
 }
 
+
 @Composable
 fun WishlistCard(
     book: WishlistTemplate,
     onRemoveClick: () -> Unit,
-    onAddToCartClick: () -> Unit
+    onAddToCartClick: () -> Unit,
+    onBookClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .clickable { onBookClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFD7C5A1))
@@ -142,72 +150,67 @@ fun WishlistCard(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(end = 12.dp)
-                ) {
-                    // Book cover image
-                    Image(
-                        painter = rememberAsyncImagePainter(model = book.image),
-                        contentDescription = "${book.title} Cover",
-                        modifier = Modifier
-                            .size(120.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .align(Alignment.Start)
-                    )
+                // Book Cover Image
+                Image(
+                    painter = rememberAsyncImagePainter(model = book.image),
+                    contentDescription = "${book.title} Cover",
+                    modifier = Modifier
+                        .width(160.dp)
+                        .height(200.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .padding(end = 8.dp)
+                )
 
-                    // Trashcan icon
-                    IconButton(
-                        onClick = onRemoveClick,
-                        modifier = Modifier
-                            .size(36.dp)
-                            .align(Alignment.Start)
-                            .padding(top = 4.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Remove from Wishlist",
-                            tint = Color.Black
-                        )
-                    }
-                }
-
+                // Title and price
                 Column(
                     modifier = Modifier
-                        .weight(1f)
+                        .fillMaxWidth()
                         .padding(start = 8.dp, end = 12.dp)
-                        .align(Alignment.CenterVertically)
                 ) {
                     Text(
                         text = book.title,
                         style = MaterialTheme.typography.titleMedium.copy(
-                            fontSize = 20.sp,
+                            fontSize = 22.sp,
                             fontWeight = FontWeight.Bold
                         ),
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 4.dp, bottom = 8.dp)
+                            .padding(bottom = 25.dp)
                     )
 
-                    // Price of the book
                     Text(
                         text = book.price,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontSize = 22.sp,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 20.sp,
                             fontWeight = FontWeight.Medium
-                        ),
-                        modifier = Modifier.padding(bottom = 12.dp)
+                        )
                     )
                 }
             }
 
-            // Shopping-Cart Icon
+            // Delete Icon
+            IconButton(
+                onClick = onRemoveClick,
+                modifier = Modifier
+                    .size(36.dp)
+                    .align(Alignment.BottomStart)
+                    .padding(top = 12.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Remove from Cart",
+                    tint = Color.Black
+                )
+            }
+
+            // Shopping-Cart-Icon
             IconButton(
                 onClick = onAddToCartClick,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .size(36.dp)
-                    .padding(bottom = 12.dp)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_add_shopping_cart_24),
@@ -218,4 +221,3 @@ fun WishlistCard(
         }
     }
 }
-

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,7 +42,7 @@ fun CartScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(110.dp)
-                    .background(Color(0xFF704214))
+                    .background(Color(0xFF745447))
             ) {
                 Column(
                     modifier = Modifier
@@ -115,7 +116,7 @@ fun ShoppingCartCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(horizontal = 8.dp, vertical = 4.dp),
         onClick = onClick,
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         shape = RoundedCornerShape(8.dp),
@@ -130,85 +131,87 @@ fun ShoppingCartCard(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(end = 12.dp)
-                ) {
-                    // Book cover image
-                    Image(
-                        painter = rememberAsyncImagePainter(model = book.image),
-                        contentDescription = "${book.title} Cover",
-                        modifier = Modifier
-                            .size(120.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .align(Alignment.Start)
-                    )
+                // Book Cover Image
+                Image(
+                    painter = rememberAsyncImagePainter(model = book.image),
+                    contentDescription = "${book.title} Cover",
+                    modifier = Modifier
+                        .width(160.dp)
+                        .height(200.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                )
 
-                    // Delete icon
-                    IconButton(
-                        onClick = onRemove,
-                        modifier = Modifier
-                            .size(36.dp)
-                            .align(Alignment.Start)
-                            .padding(top = 4.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Remove from Cart",
-                            tint = Color.Black
-                        )
-                    }
-                }
-
-                // Title and Price of the book
+                // Title and Price
                 Column(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 8.dp, end = 12.dp)
-                        .padding(top = 8.dp)
+                        .padding(start = 8.dp)
                 ) {
-                    // Title
                     Text(
                         text = book.title,
                         style = MaterialTheme.typography.titleMedium.copy(
-                            fontSize = 20.sp,
+                            fontSize = 22.sp,
                             fontWeight = FontWeight.Bold
                         ),
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 8.dp)
+                            .padding(top = 16.dp, bottom = 30.dp)
                     )
 
-                    // Price of the book
-                    Text(
-                        text = book.price,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Medium
-                        ),
-                        modifier = Modifier.padding(bottom = 12.dp)
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = book.price,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Medium
+                            ),
+                            modifier = Modifier.padding(end = 12.dp)
+                        )
+
+                        // "Purchase"-Button
+                        Button(
+                            onClick = onPurchase,
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB87333)),
+                            shape = RoundedCornerShape(8.dp),
+                            contentPadding = PaddingValues(start = 4.dp, end = 4.dp),
+                            modifier = Modifier
+                                .height(40.dp)
+                                .width(100.dp)
+                        ) {
+                            Text(
+                                text = "Purchase",
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontSize = 18.sp,
+                                    color = Color.White
+                                ),
+                                modifier = Modifier.align(Alignment.CenterVertically)
+                            )
+                        }
+                    }
                 }
             }
 
-            // Purchase-Button
-            Button(
-                onClick = onPurchase,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB87333)),
-                shape = RoundedCornerShape(8.dp),
+            // Delete Icon
+            IconButton(
+                onClick = onRemove,
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(12.dp)
-                    .height(40.dp)
+                    .size(36.dp)
+                    .align(Alignment.BottomStart)
+                    .padding(top = 12.dp)
             ) {
-                Text(
-                    text = "Purchase",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 14.sp,
-                        color = Color.White
-                    )
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Remove from Cart",
+                    tint = Color.Black
                 )
             }
         }
     }
 }
+
+

@@ -97,6 +97,7 @@ fun AppNavigation(
             composable(route = "wishlist") {
                 WishlistScreen(navController = navController)
             }
+
             // Define the "cart" screen destination
             composable("cart") {
                 CartScreen(
