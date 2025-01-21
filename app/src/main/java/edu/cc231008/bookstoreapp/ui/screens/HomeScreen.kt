@@ -220,7 +220,8 @@ fun BookCard(book: BookTemplate, onClick: () -> Unit) {
                     text = book.title,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
                     ),
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
@@ -232,7 +233,8 @@ fun BookCard(book: BookTemplate, onClick: () -> Unit) {
                     text = "Price: ${book.price}",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
+                        color = Color.Black
                     )
                 )
             }

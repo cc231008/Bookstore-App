@@ -169,7 +169,8 @@ fun BookDetailsScreen(
             text = book.title,
             style = MaterialTheme.typography.titleLarge.copy(
                 fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
             ),
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -179,12 +180,14 @@ fun BookDetailsScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Book Autors
         if (book.authors.isNotBlank()) {
             Text(
                 text = "Written by ${book.authors}",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Normal
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Black
                 ),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -220,7 +223,8 @@ fun BookDetailsScreen(
                         text = "${book.pages} Pages",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
+                            color = Color.Black
                         ),
                         textAlign = TextAlign.Center
                     )
@@ -244,6 +248,7 @@ fun BookDetailsScreen(
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium,
+                                color = Color.Black
                             ),
                             textAlign = TextAlign.Center
                         )
@@ -267,7 +272,8 @@ fun BookDetailsScreen(
             text = "Description",
             style = MaterialTheme.typography.titleMedium.copy(
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
             ),
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -286,7 +292,8 @@ fun BookDetailsScreen(
                 text = android.text.Html.fromHtml(book.desc, android.text.Html.FROM_HTML_MODE_COMPACT).toString(),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontSize = 18.sp,
-                    lineHeight = 30.sp
+                    lineHeight = 30.sp,
+                    color = Color.Black
                 ),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -353,7 +360,8 @@ fun BookDetailsScreen(
                 text = "Comments:",
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
                 ),
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
@@ -439,7 +447,7 @@ fun BookDetailsScreen(
                         .padding(horizontal = 16.dp, vertical = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFFe6decf)),
                     shape = RoundedCornerShape(8.dp),
-                    elevation = CardDefaults.cardElevation(4.dp)
+                    elevation = CardDefaults.cardElevation(4.dp),
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
@@ -447,7 +455,10 @@ fun BookDetailsScreen(
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Gray
                         )
-                        Text(text = comment.comment, style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            text = comment.comment,
+                            style = MaterialTheme.typography.bodyMedium.copy(color = Color.Black)
+                        )
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.End

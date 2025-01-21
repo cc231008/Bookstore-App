@@ -29,7 +29,7 @@ class CheckoutViewModel(
         isbn13 = "",
         price = "",
         image = "",
-        url = ""
+        url = "",
     ))
     val cart = _cart.asStateFlow()
 

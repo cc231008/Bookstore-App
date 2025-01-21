@@ -172,7 +172,8 @@ fun ShoppingCartCard(
                         text = book.title,
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontSize = 22.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
                         ),
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
@@ -190,12 +191,13 @@ fun ShoppingCartCard(
                             text = book.price,
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontSize = 20.sp,
-                                fontWeight = FontWeight.Medium
+                                fontWeight = FontWeight.Medium,
+                                color = Color.Black
                             ),
                             modifier = Modifier.padding(end = 12.dp)
                         )
 
-                        // "Purchase"-Button
+                        // "Buy"-Button
                         Button(
                             onClick = onPurchase,
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB87333)),
@@ -206,7 +208,7 @@ fun ShoppingCartCard(
                                 .width(100.dp)
                         ) {
                             Text(
-                                text = "Purchase",
+                                text = "Buy",
                                 style = MaterialTheme.typography.bodyMedium.copy(
                                     fontSize = 18.sp,
                                     color = Color.White

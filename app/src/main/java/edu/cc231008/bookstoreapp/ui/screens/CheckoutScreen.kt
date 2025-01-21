@@ -12,10 +12,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -87,6 +91,8 @@ fun CheckoutScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color(0xFFF5F5DC))
+                    .verticalScroll(rememberScrollState()), // Enable scrolling
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
                     modifier = Modifier
@@ -104,59 +110,28 @@ fun CheckoutScreen(
                     )
                 }
 
-                Column(
+                Image(
+                    painter = rememberAsyncImagePainter(cartItem.image),
+                    contentDescription = "Book Cover",
                     modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(cartItem.image),
-                        contentDescription = "Book Cover",
-                        modifier = Modifier
-                            .size(300.dp)
-                            .padding(8.dp)
-                    )
+                        .size(300.dp)
+                        .padding(8.dp)
+                )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                    Text(
-                        text = cartItem.title,
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        ),
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        maxLines = 2
-                    )
+                Text(
+                    text = cartItem.title,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    ),
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    maxLines = 2
+                )
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        Text(
-                            text = "Review",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black
-                            ),
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                        Text(
-                            text = cartItem.subtitle,
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = 16.sp,
-                                color = Color.Gray
-                            )
-                        )
-                    }
-                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
 
@@ -204,4 +179,5 @@ fun CheckoutScreen(
         }
     }
 }
+
 

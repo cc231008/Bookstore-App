@@ -107,10 +107,10 @@ fun EditCommentScreen(
                         value = commentText,
                         onValueChange = {
                             commentText = it
-                            errorMessage = "" // Clear error message on change
+                            errorMessage = ""
                         },
-                        label = { Text("Comment") },
-                        placeholder = { Text("Enter your comment here...") },
+                        label = { Text("Comment", color = Color.Black) },
+                        placeholder = { Text("Enter your comment here...", color = Color.Gray) },
                         singleLine = false,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -119,7 +119,12 @@ fun EditCommentScreen(
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Color(0xFFD7C5A1),
                             focusedIndicatorColor = Color(0xFF745447),
-                            unfocusedIndicatorColor = Color(0xFFB0B0B0)
+                            unfocusedIndicatorColor = Color(0xFFB0B0B0),
+                            cursorColor = Color.Black // Schwarzer Cursor
+                        ),
+                        textStyle = androidx.compose.ui.text.TextStyle(
+                            color = Color.Black,
+                            fontSize = 18.sp
                         )
                     )
 
