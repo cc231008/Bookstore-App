@@ -31,7 +31,11 @@ class BookDetailViewModel(
                 isbn13 = "",
                 price = "",
                 image = "",
-                url = ""
+                url = "",
+                desc = "",
+                authors = "",
+                pages = "",
+                rating = ""
             )
         )
     )

@@ -8,7 +8,11 @@ data class BookTemplate(
     val isbn13: String,
     val price: String,
     val image: String,
-    val url: String
+    val url: String,
+    val desc: String,
+    val authors: String,
+    val pages: String,
+    val rating: String
 )
 
 data class WishlistTemplate(

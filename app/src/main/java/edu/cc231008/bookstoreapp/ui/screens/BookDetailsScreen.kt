@@ -74,7 +74,6 @@ fun BookDetailsScreen(
     val comments by bookDetailViewModel.comments.collectAsStateWithLifecycle()
     var commentText by rememberSaveable { mutableStateOf("") }
 
-    // This part of the code responsible for updating list of comments when the comment is edited.
     val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
     val commentEdited = savedStateHandle?.get<Boolean>("commentEdited") ?: false
     LaunchedEffect(commentEdited) {
@@ -83,60 +82,245 @@ fun BookDetailsScreen(
             savedStateHandle?.set("commentEdited", false)
         }
     }
-        // Load the wishlist status from ViewModel
-        var isWishlist by remember { mutableStateOf(false) }
 
-        var isAddedToCart by remember { mutableStateOf(false) }
+    var isWishlist by remember { mutableStateOf(false) }
+    var isAddedToCart by remember { mutableStateOf(false) }
 
-        // On screen load, check if the book is in the wishlist
-        LaunchedEffect(book.isbn13) {
-            isWishlist = bookDetailViewModel.isInWishlist(book.isbn13)
+    LaunchedEffect(book.isbn13) {
+        isWishlist = bookDetailViewModel.isInWishlist(book.isbn13)
+    }
+
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF5F5DC))
+            .verticalScroll(scrollState)
+    ) {
+        // Header
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .background(Color(0xFF745447)),
+        ) {
+            Text(
+                text = "Bookstore",
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                ),
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
 
-        // Scrollable column
-        val scrollState = rememberScrollState()
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Column(
+        // Book cover and wishlist icon
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFFF5F5DC))
-                .verticalScroll(scrollState)
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
         ) {
-            // Header with title
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-                    .background(Color(0xFF745447)),
+            IconButton(
+                onClick = {
+                    if (isWishlist) {
+                        bookDetailViewModel.removeFromWishlist(book.isbn13)
+                    } else {
+                        bookDetailViewModel.addBookToWishlist(
+                            WishlistTemplate(
+                                id = 0,
+                                isbn13 = book.isbn13,
+                                title = book.title,
+                                subtitle = book.subtitle,
+                                price = book.price,
+                                image = book.image,
+                                url = book.url
+                            )
+                        )
+                    }
+                    isWishlist = !isWishlist
+                },
+                modifier = Modifier.align(Alignment.TopEnd)
             ) {
-                // Title in the center
-                Text(
-                    text = "Bookstore",
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    ),
-                    modifier = Modifier.align(Alignment.Center)
+                Icon(
+                    imageVector = if (isWishlist) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                    contentDescription = if (isWishlist) "Remove from Wishlist" else "Add to Wishlist",
+                    tint = if (isWishlist) Color(0xFF8B0000) else Color.Gray,
+                    modifier = Modifier.size(35.dp)
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Image(
+                painter = rememberAsyncImagePainter(book.image),
+                contentDescription = "Book Cover: ${book.title}",
+                modifier = Modifier
+                    .size(400.dp)
+                    .align(Alignment.Center)
+            )
+        }
 
-            // Container for the book cover and heart icon
-            Box(
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Book title
+        Text(
+            text = book.title,
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        if (book.authors.isNotBlank()) {
+            Text(
+                text = "Written by ${book.authors}",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Normal
+                ),
+                textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(35.dp))
+
+        // Pages and Rating with star
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Pages Box
+            Card(
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .size(width = 100.dp, height = 40.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFCCB78F)),
+                shape = RoundedCornerShape(8.dp),
+                elevation = CardDefaults.cardElevation(4.dp)
             ) {
-                // Heart icon aligned to the top-left corner
-                IconButton(
-                    onClick = {
-                        if (isWishlist) {
-                            bookDetailViewModel.removeFromWishlist(book.isbn13)
-                        } else {
-                            bookDetailViewModel.addBookToWishlist(
-                                WishlistTemplate(
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = "${book.pages} Pages",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+            // Rating box
+            Card(
+                modifier = Modifier
+                    .size(width = 100.dp, height = 40.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFCCB78F)),
+                shape = RoundedCornerShape(8.dp),
+                elevation = CardDefaults.cardElevation(4.dp)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "${book.rating}/5",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                            ),
+                            textAlign = TextAlign.Center
+                        )
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_star_24),
+                            contentDescription = "Rating Star",
+                            tint = Color(0xFFA6761D),
+                            modifier = Modifier
+                                .size(28.dp)
+                                .padding(start = 4.dp)
+                        )
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Description
+        Text(
+            text = "Description",
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        )
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFCCB78F)),
+            shape = RoundedCornerShape(8.dp),
+            elevation = CardDefaults.cardElevation(4.dp)
+        ) {
+            Text(
+                text = android.text.Html.fromHtml(book.desc, android.text.Html.FROM_HTML_MODE_COMPACT).toString(),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontSize = 18.sp,
+                    lineHeight = 30.sp
+                ),
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(35.dp))
+
+        // Add to Cart Button
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .height(48.dp)
+                    .background(
+                        color = if (isAddedToCart) Color(0xFF745447) else Color(0xFFe6e1cf),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = if (isAddedToCart) Color(0xFF5E3221) else Color(0xFFB87333),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .clickable {
+                        if (!isAddedToCart) {
+                            bookDetailViewModel.addBookToCart(
+                                CartTemplate(
                                     id = 0,
                                     isbn13 = book.isbn13,
                                     title = book.title,
@@ -146,109 +330,23 @@ fun BookDetailsScreen(
                                     url = book.url
                                 )
                             )
+                            isAddedToCart = true
                         }
-                        isWishlist = !isWishlist // Update the UI state
                     },
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(start = 8.dp)
-                ) {
-                    Icon(
-                        imageVector = if (isWishlist) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                        contentDescription = if (isWishlist) "Remove from Wishlist" else "Add to Wishlist",
-                        tint = if (isWishlist) Color(0xFF8B0000) else Color.Gray,
-                        modifier = Modifier.size(35.dp)
-                    )
-                }
-
-                // Book cover image
-                Image(
-                    painter = rememberAsyncImagePainter(book.image),
-                    contentDescription = "Book Cover: ${book.title}",
-                    modifier = Modifier
-                        .size(400.dp)
-                        .align(Alignment.Center)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Book title
-            Text(
-                text = book.title,
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                ),
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(
-                text = "Price: ${book.price}",
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.Black
-                ),
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-
-
-            Spacer(modifier = Modifier.height(35.dp))
-
-            // Add to Cart Button
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(0.5f)
-                        .height(48.dp)
-                        .background(
-                            color = if (isAddedToCart) Color(0xFFB87333) else Color(0xFFF4E6C1),
-                            shape = RoundedCornerShape(15.dp)
-                        )
-                        .border(
-                            width = 1.dp,
-                            color = Color.Black,
-                            shape = RoundedCornerShape(15.dp)
-                        )
-                        .clickable {
-                            if (!isAddedToCart) { // Prevent re-adding if already added
-                                bookDetailViewModel.addBookToCart(
-                                    CartTemplate(
-                                        id = 0,
-                                        isbn13 = book.isbn13,
-                                        title = book.title,
-                                        subtitle = book.subtitle,
-                                        price = book.price,
-                                        image = book.image,
-                                        url = book.url
-                                    )
-                                )
-                                isAddedToCart = true // Update state
-                            }
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = if (isAddedToCart) "Added to Cart" else "Add to Cart",
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        )
+                Text(
+                    text = if (isAddedToCart) "Added to Cart" else "Add to Cart",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (isAddedToCart) Color.White else Color.Black
                     )
-                }
+                )
             }
+        }
 
-            Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
             // Comments section
             Text(
@@ -261,27 +359,25 @@ fun BookDetailsScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Add a new comment
-            Row(
+        // Add a new comment
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .weight(1f)
+                    .height(56.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFe6decf)),
+                shape = RoundedCornerShape(8.dp),
+                elevation = CardDefaults.cardElevation(4.dp)
             ) {
                 Box(
                     modifier = Modifier
-                        .weight(1f)
-                        .height(56.dp)
-                        .background(
-                            color = Color.White,
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .border(
-                            width = 1.dp,
-                            color = Color.Black,
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .padding(horizontal = 8.dp, vertical = 6.dp)
+                        .fillMaxSize()
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     BasicTextField(
                         value = commentText,
@@ -306,30 +402,31 @@ fun BookDetailsScreen(
                         }
                     )
                 }
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                IconButton(
-                    onClick = {
-                        if (commentText.isNotBlank()) {
-                            bookDetailViewModel.addComment(commentText)
-                            commentText = ""
-                        }
-                    },
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(
-                            color = Color(0xFF704214),
-                            shape = RoundedCornerShape(24.dp)
-                        )
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_send_24),
-                        contentDescription = "Send",
-                        tint = Color.White
-                    )
-                }
             }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            IconButton(
+                onClick = {
+                    if (commentText.isNotBlank()) {
+                        bookDetailViewModel.addComment(commentText)
+                        commentText = ""
+                    }
+                },
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(
+                        color = Color(0xFF745447),
+                        shape = RoundedCornerShape(24.dp)
+                    )
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_send_24),
+                    contentDescription = "Send",
+                    tint = Color.White
+                )
+            }
+        }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -340,8 +437,9 @@ fun BookDetailsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 4.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFD7C5A1)),
-                    shape = RoundedCornerShape(8.dp)
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFe6decf)),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = CardDefaults.cardElevation(4.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
@@ -391,6 +489,7 @@ fun BookDetailsScreen(
                         }
                     }
                 }
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
 }

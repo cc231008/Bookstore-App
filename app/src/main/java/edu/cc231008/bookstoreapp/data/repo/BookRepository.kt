@@ -18,16 +18,20 @@ class BookRepository(
     suspend fun loadApiToDatabase() {
         try {
             val bookResponse = bookRemoteService.getNewBooks()
-            println("Books Response: ${bookResponse.books}")
             if (bookResponse.error == "0") {
                 val bookEntities = bookResponse.books.map { dto ->
+                    val details = bookRemoteService.getBookDetails(dto.isbn13)
                     BookEntity(
                         title = dto.title,
                         subtitle = dto.subtitle,
                         isbn13 = dto.isbn13,
                         price = dto.price,
                         image = dto.image,
-                        url = dto.url
+                        url = dto.url,
+                        desc = details.desc,
+                        authors = details.authors,
+                        pages = details.pages,
+                        rating = details.rating
                     )
                 }
 
@@ -51,7 +55,11 @@ class BookRepository(
                     isbn13 = entity.isbn13,
                     price = entity.price,
                     image = entity.image,
-                    url = entity.url
+                    url = entity.url,
+                    desc = entity.desc,
+                    authors = entity.authors,
+                    pages = entity.pages,
+                    rating = entity.rating
                 )
             }
         }
@@ -67,7 +75,11 @@ class BookRepository(
                 isbn13 = entity.isbn13,
                 price = entity.price,
                 image = entity.image,
-                url = entity.url
+                url = entity.url,
+                desc = entity.desc,
+                authors = entity.authors,
+                pages = entity.pages,
+                rating = entity.rating
             )
         }
     }
@@ -81,7 +93,11 @@ class BookRepository(
             isbn13 = book.isbn13,
             price = book.price,
             image = book.image,
-            url = book.url
+            url = book.url,
+            desc = book.desc,
+            authors = book.authors,
+            pages = book.pages,
+            rating = book.rating
         )
     }
 

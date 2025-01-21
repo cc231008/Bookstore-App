@@ -7,7 +7,11 @@ data class BookDto(
     val isbn13: String,
     val price: String,
     val image: String,
-    val url: String
+    val url: String,
+    val desc: String,
+    val authors: String,
+    val pages: String,
+    val rating: String
 )
 
 //BookResponse holds BookDto as well as error messages in case of fetching failure.
