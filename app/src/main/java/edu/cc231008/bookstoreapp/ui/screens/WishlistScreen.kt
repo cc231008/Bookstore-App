@@ -58,6 +58,7 @@ fun WishlistScreen(
     val wishListBooks = wishListViewModel.wishlistBooks.collectAsStateWithLifecycle()
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         containerColor = Color(0xFFF5F5DC),
         topBar = {
             // Top bar

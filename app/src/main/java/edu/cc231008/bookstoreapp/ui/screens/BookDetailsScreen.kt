@@ -180,7 +180,7 @@ fun BookDetailsScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Book Autors
+        // Book Authors
         if (book.authors.isNotBlank()) {
             Text(
                 text = "Written by ${book.authors}",
@@ -195,6 +195,22 @@ fun BookDetailsScreen(
                     .padding(horizontal = 16.dp)
             )
         }
+
+        Spacer(modifier = Modifier.height(35.dp))
+
+        // Book Price
+        Text(
+            text = book.price,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.Black
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
 
         Spacer(modifier = Modifier.height(35.dp))
 

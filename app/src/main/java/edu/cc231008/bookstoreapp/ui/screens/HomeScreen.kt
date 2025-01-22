@@ -63,6 +63,7 @@ fun HomeScreen(
     var searchQuery by rememberSaveable(stateSaver = textFieldValueSaver) { mutableStateOf(TextFieldValue("")) }
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         containerColor = pageBackgroundColor, // Set the background color of the scaffold
         topBar = {
             // Top bar with a title and a search bar

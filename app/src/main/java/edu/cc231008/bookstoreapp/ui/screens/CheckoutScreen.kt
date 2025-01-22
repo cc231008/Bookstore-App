@@ -18,8 +18,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -32,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -53,6 +52,7 @@ fun CheckoutScreen(
 
     if (cartItem != null) {
         Scaffold(
+            // The bottomBar displays the price and the Purchase button
             bottomBar = {
                 Box(
                     modifier = Modifier
@@ -76,6 +76,7 @@ fun CheckoutScreen(
                                 color = Color.Black
                             )
                         )
+                        // Purchase button triggers the AlertDialog
                         Button(
                             onClick = { showDialog = true },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF4E6C1)),
@@ -87,6 +88,7 @@ fun CheckoutScreen(
                 }
             }
         ) { innerPadding ->
+            // Main content for the checkout screen
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -128,13 +130,15 @@ fun CheckoutScreen(
                         color = Color.Black
                     ),
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    maxLines = 2
+                    maxLines = 2,
+                    textAlign = TextAlign.Center
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
 
+        // Show the confirmation dialog if showDialog is true
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
@@ -164,6 +168,7 @@ fun CheckoutScreen(
             )
         }
     } else {
+        // If the cart item does not exist, show an error message
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
