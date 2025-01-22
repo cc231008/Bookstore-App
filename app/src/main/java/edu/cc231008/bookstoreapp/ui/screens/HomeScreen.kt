@@ -136,6 +136,7 @@ fun HomeScreen(
                             ),
                             modifier = Modifier.weight(1f), // Take up available width
                             colors = TextFieldDefaults.textFieldColors(
+                                focusedTextColor = Color.Black,
                                 containerColor = Color.Transparent,
                                 focusedIndicatorColor = Color.Transparent,
                                 unfocusedIndicatorColor = Color.Transparent,

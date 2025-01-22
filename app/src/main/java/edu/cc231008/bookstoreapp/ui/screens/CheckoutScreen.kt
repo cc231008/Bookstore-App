@@ -142,7 +142,12 @@ fun CheckoutScreen(
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
-                title = { Text("Are you sure you want to buy this book?") },
+                title = {
+                    Text(
+                        "Are you sure you want to buy this book?",
+                        color = Color.Black
+                    )
+                },
                 confirmButton = {
                     Button(
                         onClick = {
