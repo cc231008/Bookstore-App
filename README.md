@@ -1,3 +1,6 @@
+# APK to Download
+[bookstore-app.github.io-master.zip](https://github.com/user-attachments/files/18511036/bookstore-app.github.io-master.zip)
+
 # Bookstore App ReadMe
 
 ## Brief Description
@@ -73,3 +76,4 @@ Below are the wireframes showcasing the app's key screens:
 ### User Flow
 The flow diagram below illustrates how users navigate through the app's screens:
 ![image](https://github.com/user-attachments/assets/acc80b3c-fa76-4e94-9be2-dfedeb445244)
+
